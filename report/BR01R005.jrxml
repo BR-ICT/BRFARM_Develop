@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 5.5.2  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BF01R005" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffd84165-eee5-4a4c-889a-7fb0c0510697">
+	<property name="ireport.zoom" value="2.8531167061101104"/>
+	<property name="ireport.x" value="29"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SQLite"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="Farm" class="java.lang.String"/>
+	<parameter name="Breed" class="java.lang.String"/>
+	<parameter name="StartDate" class="java.lang.String"/>
+	<parameter name="BreedAll" class="java.lang.String">
+		<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+		<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+		<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+		<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+		<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+		<property name="net.sf.jasperreports.export.xls.ignore.cell.border" value="true"/>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT INVE_DATE,INVE_FARM,FARM_NAME,INVE_HOUSE,INVE_ITEM,ITEM_GROUP,INVE_BALANCE
+FROM FAR_DINVENBAL,FAR_MITEM,FAR_MFARM
+WHERE INVE_FARM = $P{Farm}
+AND INVE_BREED IN ($P{Breed},$P{BreedAll})
+AND INVE_FARM = ITEM_FARM
+AND INVE_FARM = FARM_CODE
+AND INVE_ITEM = ITEM_CODE
+AND ITEM_STOCK = '1'
+AND SUBSTR(INVE_DATE,7) || SUBSTR(INVE_DATE,4,2) || SUBSTR(INVE_DATE,1,2) = $P{StartDate}
+ORDER BY INVE_DATE,INVE_HOUSE,INVE_ITEM]]>
+	</queryString>
+	<field name="INVE_DATE" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="INVE_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="INVE_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_DINVENBAL"/>
+	</field>
+	<field name="INVE_FARM" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="INVE_FARM"/>
+		<property name="com.jaspersoft.studio.field.label" value="INVE_FARM"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_DINVENBAL"/>
+	</field>
+	<field name="FARM_NAME" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="FARM_NAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="FARM_NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_MFARM"/>
+	</field>
+	<field name="INVE_HOUSE" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="INVE_HOUSE"/>
+		<property name="com.jaspersoft.studio.field.label" value="INVE_HOUSE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_DINVENBAL"/>
+	</field>
+	<field name="INVE_ITEM" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="INVE_ITEM"/>
+		<property name="com.jaspersoft.studio.field.label" value="INVE_ITEM"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_DINVENBAL"/>
+	</field>
+	<field name="ITEM_GROUP" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="ITEM_GROUP"/>
+		<property name="com.jaspersoft.studio.field.label" value="ITEM_GROUP"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_MITEM"/>
+	</field>
+	<field name="INVE_BALANCE" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="INVE_BALANCE"/>
+		<property name="com.jaspersoft.studio.field.label" value="INVE_BALANCE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_DINVENBAL"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="74" splitType="Stretch">
+			<staticText>
+				<reportElement x="268" y="0" width="285" height="21" forecolor="#990000" uuid="acbfdd9b-87aa-4cfd-8f8b-b093853150a4"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BANGKOK RANCH PUBLIC CO.,LTD.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="398" y="43" width="35" height="15" uuid="a957d081-5122-4591-adc1-2b24c9a1b652"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Farm :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="268" y="43" width="63" height="15" uuid="eaff8bcf-ece9-4011-93fb-d0ce1dd47ad6"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="733" y="0" width="68" height="21" uuid="287db53a-93f6-4422-9695-634e2f365482"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FO-PS03-013]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="57" width="56" height="17" uuid="6a2d9b0e-724c-4baa-b192-14424b113a77"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BR01R005]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="56" height="57" uuid="099875a2-4a95-4c90-a826-beb65521ed2d"/>
+				<imageExpression><![CDATA["\\img\\logo\\icon.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="331" y="43" width="67" height="15" uuid="e370a23c-e3ba-417b-b59b-8da336a66e07"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{StartDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="268" y="21" width="202" height="22" forecolor="#990000" uuid="57d8f521-7a8d-49a6-8cd6-bd16a7a7f817"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Inventory Balance Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="433" y="43" width="19" height="15" uuid="6031ec18-5715-443d-8ed5-29283e91f99c"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{INVE_FARM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="452" y="43" width="101" height="15" uuid="1cabb39c-c1c7-4061-b380-374792bd2eaa"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{FARM_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="471" y="21" width="82" height="22" forecolor="#990000" uuid="e60e4493-00aa-49c8-9763-11571b0ab4f2"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Breed}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="74">
+			<crosstab>
+				<reportElement x="0" y="0" width="802" height="74" uuid="bccfe982-f3ac-4724-aae6-4165f137fe64"/>
+				<crosstabHeaderCell>
+					<cellContents/>
+				</crosstabHeaderCell>
+				<rowGroup name="INVE_HOUSE" width="70" totalPosition="End">
+					<bucket class="java.lang.Object">
+						<bucketExpression><![CDATA[$F{INVE_HOUSE}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="25" uuid="3f423d56-9b76-4dfb-ab5b-268b7352aab0"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="TH SarabunPSK" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[""+$V{INVE_HOUSE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="25" uuid="9ef05613-39cc-41e2-aa8c-0ade5f50275d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="TH SarabunPSK" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total :]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="INVE_ITEM" height="15" totalPosition="End">
+					<bucket class="java.lang.Object">
+						<bucketExpression><![CDATA[$F{INVE_ITEM}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="48" height="15" uuid="2d5f4b91-a03c-4fc5-950f-348a6708b133"/>
+								<textElement>
+									<font fontName="TH SarabunPSK" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[""+$V{INVE_ITEM}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#005FB3" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="29" forecolor="#FFFFFF" uuid="285064b1-e6f3-43b5-9a6e-1d3df71cb29b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="TH SarabunPSK" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total :]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="ITEM_GROUP" height="14" totalPosition="End">
+					<bucket class="java.lang.Object">
+						<bucketExpression><![CDATA[$F{ITEM_GROUP}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="48" height="14" uuid="b9988ffe-4d73-408b-9bfd-e0cbec71e047"/>
+								<textElement>
+									<font fontName="TH SarabunPSK" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[""+$V{ITEM_GROUP}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="INVE_BALANCEMeasure" class="java.math.BigDecimal" calculation="Sum">
+					<measureExpression><![CDATA[$F{INVE_BALANCE}]]></measureExpression>
+				</measure>
+				<crosstabCell width="48" height="25">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="#,##0.00">
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="48" height="25" uuid="778abf6e-2783-48b7-a8b5-35e2a536ca4d"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="TH SarabunPSK"/>
+							</textElement>
+							<textFieldExpression><![CDATA[""+($V{INVE_BALANCEMeasure}!=null?$V{INVE_BALANCEMeasure}:0)]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" columnTotalGroup="ITEM_GROUP">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" columnTotalGroup="INVE_ITEM">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="#,##0.00">
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="2986935f-d532-4eac-bc62-402da07b2a85"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="TH SarabunPSK"/>
+							</textElement>
+							<textFieldExpression><![CDATA[""+$V{INVE_BALANCEMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="48" height="25" rowTotalGroup="INVE_HOUSE">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="#,##0.00">
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="48" height="25" uuid="8d5d1468-07f4-4357-891e-18543c7c35a9"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="TH SarabunPSK" isBold="true" isUnderline="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[""+$V{INVE_BALANCEMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="0" rowTotalGroup="INVE_HOUSE" columnTotalGroup="ITEM_GROUP">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="INVE_HOUSE" columnTotalGroup="INVE_ITEM">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="#,##0.00">
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="a3d76e9a-1ee2-4b02-9a07-de14cac0981a"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="TH SarabunPSK" isBold="true" isUnderline="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[""+$V{INVE_BALANCEMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

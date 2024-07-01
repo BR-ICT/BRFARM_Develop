@@ -1,0 +1,2052 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 5.5.2  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BF01R004" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffd84165-eee5-4a4c-889a-7fb0c0510697">
+	<property name="ireport.zoom" value="2.479338842975216"/>
+	<property name="ireport.x" value="86"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SQLite"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="192"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="803"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.border" value="true"/>
+	<style name="AltBackgrd">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}.intValue() % 2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#EAEAEA"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="Farm" class="java.lang.String"/>
+	<parameter name="Breed" class="java.lang.String"/>
+	<parameter name="BreedAll" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="StartDate" class="java.lang.String"/>
+	<parameter name="EndDate" class="java.lang.String"/>
+	<parameter name="HCG2001" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HCG3001" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HCC2004" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HCC3004" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FGroup" class="java.lang.String"/>
+	<parameter name="MGroup" class="java.lang.String"/>
+	<parameter name="Approver" class="java.lang.String"/>
+	<parameter name="Giver" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT DISTINCT *
+FROM
+(SELECT FLOC_FARM,FARM_NAME,SUBSTR(FLOC_CODE,0,4) AS FLOC_CODE,a.TRAN_HOUSE,REC_DATE,WK_DATE,WEEK,AGE,SUM_DAY,
+COALESCE(ROUND((((SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330) * 1000) / (BAL_PSF + BAL_PSM + SM_PCF + SM_PCM + SM_PDF + SM_PDM)) / SUM_DAY,2),0) AS GDD,
+COALESCE(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330,0) AS SM_FEED,COALESCE(SM_FM010,0) AS SM_FM010,COALESCE(SM_FM020,0) AS SM_FM020,COALESCE(SM_FM030,0) AS SM_FM030,
+COALESCE(SM_FM040,0) AS SM_FM040,COALESCE(SM_FM050,0) AS SM_FM050,COALESCE(SM_FM060,0) AS SM_FM060,COALESCE(SM_FM070,0) AS SM_FM070,COALESCE(SM_FM310,0) AS SM_FM310,COALESCE(SM_FM320,0) AS SM_FM320,COALESCE(SM_FM330,0) AS SM_FM330,
+COALESCE(BAL_PSF,0) AS BAL_PSF,COALESCE(BAL_PSM,0) AS BAL_PSM,COALESCE(SM_PCF,0) AS SM_PCF,COALESCE(SM_PCM,0) AS SM_PCM,COALESCE(SM_PDF,0) AS SM_PDF,COALESCE(SM_PDM,0) AS SM_PDM,
+COALESCE(ROUND(((SM_PCF + SM_PDF) * 100) / (COALESCE(BAL_PSF,0) +  COALESCE(SM_PCF,0) + COALESCE(SM_PDF,0)),2),0) AS LOSS_PSF,
+COALESCE(ROUND(((SM_PCM + SM_PDM) * 100) / (COALESCE(BAL_PSM,0) +  COALESCE(SM_PCM,0) + COALESCE(SM_PDM,0)),2),0) AS LOSS_PSM,
+COALESCE(ROUND((SM_PCF * 100) / (COALESCE(BAL_PSF,0) +  COALESCE(SM_PCF,0) + COALESCE(SM_PDF,0)),2),0) AS LOSS_PCF,
+COALESCE(ROUND((SM_PCM * 100) / (COALESCE(BAL_PSM,0) +  COALESCE(SM_PCM,0) + COALESCE(SM_PDM,0)),2),0) AS LOSS_PCM,
+COALESCE(ROUND((SM_PDF * 100) / (COALESCE(BAL_PSF,0) +  COALESCE(SM_PCF,0) + COALESCE(SM_PDF,0)),2),0) AS LOSS_PDF,
+COALESCE(ROUND((SM_PDM * 100) / (COALESCE(BAL_PSM,0) +  COALESCE(SM_PCM,0) + COALESCE(SM_PDM,0)),2),0) AS LOSS_PDM,
+COALESCE(SM_HCG + SM_HCS + SM_HCD + SM_HCC,0) AS SM_HC,COALESCE(ROUND((((SM_HCG + SM_HCS + SM_HCD + SM_HCC) / (COALESCE(BAL_PSF,0) +  COALESCE(SM_PCF,0) + COALESCE(SM_PDF,0))) / SUM_DAY) * 100,2),0) AS PC_HC,
+COALESCE(ROUND(SUM_W_HCG / SUM_DAY,2),0) AS W_HCG,COALESCE(SM_HCG,0) AS SM_HCG,COALESCE(ROUND((SM_HCG * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),2),0) AS PC_HCG,
+COALESCE(SM_HCS,0) AS SM_HCS,COALESCE(ROUND((SM_HCS * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),2),0) AS PC_HCS,
+COALESCE(SM_HCD,0) AS SM_HCD,COALESCE(ROUND((SM_HCD * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),2),0) AS PC_HCD,
+COALESCE(SM_HCC,0) AS SM_HCC,COALESCE(ROUND((SM_HCC * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),2),0) AS PC_HCC,
+COALESCE(SM_HC01,0) AS H01,COALESCE(SM_HC02,0) AS H02,HOUS_LASTMO
+FROM
+(
+SELECT DISTINCT FLOC_FARM,SUBSTR(FLOC_CODE,0,4) AS FLOC_CODE,TRAN_HOUSE,SUBSTR(TRAN_HOUSE,4) AS SUBHOUSE,FLOC_STDATE AS REC_DATE,FLOC_STWEEK AS WK_DATE,
+CEIL(((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) - JULIANDAY(SUBSTR(FLOC_STWEEK,7)||"-"||SUBSTR(FLOC_STWEEK,4,2)||"-"||SUBSTR(FLOC_STWEEK,1,2))) / 7) +1) AS WEEK,
+JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) - JULIANDAY(SUBSTR(FLOC_STDATE,7)||"-"||SUBSTR(FLOC_STDATE,4,2)||"-"||SUBSTR(FLOC_STDATE,1,2)) +1 AS AGE,
+ROUND((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) +1) - JULIANDAY(SUBSTR($P{StartDate},0,5)||"-"||SUBSTR($P{StartDate},5,2)||"-"||SUBSTR($P{StartDate},7,2))) AS SUM_DAY
+FROM FAR_MTRANSECTION,FAR_GROWER,FAR_FLOCK
+WHERE TRAN_FARM = $P{Farm}
+AND TRAN_BREED = $P{Breed}
+AND SUBSTR(TRAN_HOUSE,4) NOT IN ('201','301')
+AND TRAN_HOUSE = PSGR_HOUSE
+and PSGR_MO <> ''
+AND PSGR_FLOCK = FLOC_CODE
+AND FLOC_STATUS = '1'
+AND SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}
+UNION ALL
+SELECT DISTINCT FLOC_FARM,SUBSTR(FLOC_CODE,0,4) AS FLOC_CODE,TRAN_HOUSE,SUBSTR(TRAN_HOUSE,4) AS SUBHOUSE,FLOC_STDATE AS REC_DATE,FLOC_STWEEK AS WK_DATE,
+CEIL(((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) - JULIANDAY(SUBSTR(FLOC_STWEEK,7)||"-"||SUBSTR(FLOC_STWEEK,4,2)||"-"||SUBSTR(FLOC_STWEEK,1,2))) / 7) +1) AS WEEK,
+JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) - JULIANDAY(SUBSTR(FLOC_STDATE,7)||"-"||SUBSTR(FLOC_STDATE,4,2)||"-"||SUBSTR(FLOC_STDATE,1,2)) +1 AS AGE,
+ROUND((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) +1) - JULIANDAY(SUBSTR($P{StartDate},0,5)||"-"||SUBSTR($P{StartDate},5,2)||"-"||SUBSTR($P{StartDate},7,2))) AS SUM_DAY
+FROM FAR_MTRANSECTION,FAR_GROWERMT,FAR_FLOCK
+WHERE TRAN_FARM = $P{Farm}
+AND TRAN_BREED = $P{Breed}
+AND SUBSTR(TRAN_HOUSE,4) NOT IN ('201','301')
+AND TRAN_HOUSE = PSGR_HOUSE
+and PSGR_MO <> ''
+AND PSGR_FLOCK = FLOC_CODE
+AND FLOC_STATUS = '1'
+UNION ALL
+SELECT DISTINCT FLOC_FARM,SUBSTR(FLOC_CODE,0,4) AS FLOC_CODE,TRAN_HOUSE,SUBSTR(TRAN_HOUSE,4) AS SUBHOUSE,FLOC_STDATE AS REC_DATE,FLOC_STWEEK AS WK_DATE,
+CEIL(((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) - JULIANDAY(SUBSTR(FLOC_STWEEK,7)||"-"||SUBSTR(FLOC_STWEEK,4,2)||"-"||SUBSTR(FLOC_STWEEK,1,2))) / 7) +1) AS WEEK,
+JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) - JULIANDAY(SUBSTR(FLOC_STDATE,7)||"-"||SUBSTR(FLOC_STDATE,4,2)||"-"||SUBSTR(FLOC_STDATE,1,2)) +1 AS AGE,
+ROUND((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) +1) - JULIANDAY(SUBSTR($P{StartDate},0,5)||"-"||SUBSTR($P{StartDate},5,2)||"-"||SUBSTR($P{StartDate},7,2))) AS SUM_DAY
+FROM FAR_MTRANSECTION,FAR_LAYING,FAR_FLOCK
+WHERE TRAN_FARM = $P{Farm}
+AND TRAN_BREED = $P{Breed}
+AND SUBSTR(TRAN_HOUSE,4) NOT IN ('201','301')
+AND TRAN_HOUSE = PSGR_HOUSE
+and PSGR_MO <> ''
+AND PSGR_FLOCK = FLOC_CODE
+AND FLOC_STATUS = '1'
+AND SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}
+UNION ALL
+SELECT DISTINCT FLOC_FARM,FLOC_CODE,TRAN_HOUSE,SUBSTR(TRAN_HOUSE,4) AS SUBHOUSE,FLOC_STDATE AS REC_DATE,FLOC_STWEEK AS WK_DATE,
+CEIL(((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) - JULIANDAY(SUBSTR(FLOC_STWEEK,7)||"-"||SUBSTR(FLOC_STWEEK,4,2)||"-"||SUBSTR(FLOC_STWEEK,1,2))) / 7) +1) AS WEEK,
+JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) - JULIANDAY(SUBSTR(FLOC_STDATE,7)||"-"||SUBSTR(FLOC_STDATE,4,2)||"-"||SUBSTR(FLOC_STDATE,1,2)) +1 AS AGE,
+ROUND((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) +1) - JULIANDAY(SUBSTR($P{StartDate},0,5)||"-"||SUBSTR($P{StartDate},5,2)||"-"||SUBSTR($P{StartDate},7,2))) AS SUM_DAY
+FROM FAR_MTRANSECTION,FAR_LAYINGMT,FAR_FLOCK
+WHERE TRAN_FARM = $P{Farm}
+AND TRAN_BREED = $P{Breed}
+AND SUBSTR(TRAN_HOUSE,4) NOT IN ('201','301')
+AND TRAN_HOUSE = PSGR_HOUSE
+and PSGR_MO <> ''
+AND PSGR_FLOCK = FLOC_CODE
+AND FLOC_STATUS = '1'
+AND SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}
+ORDER BY TRAN_HOUSE) AS a
+LEFT JOIN
+(SELECT INVE_HOUSE,
+SUM(CASE WHEN ITEM_GROUP = $P{FGroup} THEN INVE_BALANCE ELSE 0 END ) AS BAL_PSF,
+SUM(CASE WHEN ITEM_GROUP = $P{MGroup} THEN INVE_BALANCE ELSE 0 END ) AS BAL_PSM
+FROM FAR_DINVENBAL,FAR_MITEM
+WHERE INVE_FARM = $P{Farm}
+AND INVE_BREED IN ($P{Breed},$P{BreedAll})
+AND INVE_ITEM = ITEM_CODE
+and INVE_FARM = ITEM_FARM
+AND SUBSTR(INVE_DATE,7) || SUBSTR(INVE_DATE,4,2) || SUBSTR(INVE_DATE,1,2) = $P{EndDate}
+GROUP BY INVE_HOUSE) AS b
+ON a.TRAN_HOUSE = b.INVE_HOUSE
+LEFT JOIN
+(SELECT TRAN_HOUSE,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120010' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM010,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120020' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM020,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120030' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM030,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120040' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM040,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120050' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM050,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120060' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM060,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120070' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM070,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130010' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM310,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130020' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM320,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130030' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM330,
+SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PCF' THEN TRAN_QTY ELSE 0 END ) AS SM_PCF,
+SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PCM' THEN TRAN_QTY ELSE 0 END ) AS SM_PCM,
+SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PDF' THEN TRAN_QTY ELSE 0 END ) AS SM_PDF,
+SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PDM' THEN TRAN_QTY ELSE 0 END ) AS SM_PDM,
+SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'HCG' THEN TRAN_QTY ELSE 0 END ) AS SM_HCG,
+SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'HCS' THEN TRAN_QTY ELSE 0 END ) AS SM_HCS,
+SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'HCD' THEN TRAN_QTY ELSE 0 END ) AS SM_HCD,
+SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'HCC' THEN TRAN_QTY ELSE 0 END ) AS SM_HCC
+FROM FAR_MTRANSECTION,FAR_MITEM
+WHERE TRAN_FARM = $P{Farm}
+AND TRAN_BREED = $P{Breed}
+AND TRAN_ITEM = ITEM_CODE
+AND ITEM_FARM = TRAN_FARM
+AND SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}
+GROUP BY TRAN_HOUSE) AS c
+ON a.TRAN_HOUSE = C.TRAN_HOUSE
+LEFT JOIN
+(SELECT INFO_HOUSE,SUM(CASE WHEN INFO_ITEM IN ($P{HCG2001},$P{HCG3001}) AND INFO_DISE = 'W01' THEN INFO_QTY ELSE 0 END) AS SUM_W_HCG
+FROM FAR_MINFORM
+WHERE INFO_FARM = $P{Farm}
+AND INFO_BREED = $P{Breed}
+AND SUBSTR(INFO_DATE,7) || SUBSTR(INFO_DATE,4,2) || SUBSTR(INFO_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}
+GROUP BY INFO_HOUSE) AS d
+ON a.TRAN_HOUSE = d.INFO_HOUSE
+LEFT JOIN
+(SELECT HOUS_CODE,HOUS_LASTMO
+FROM FAR_MHOUSE
+WHERE HOUS_FARM = $P{Farm}
+AND HOUS_BREED = $P{Breed}
+AND SUBSTR(HOUS_CODE,4) NOT IN ('201','301')) AS e
+ON a.TRAN_HOUSE = e.HOUS_CODE
+LEFT JOIN
+(SELECT FARM_CODE,FARM_NAME
+FROM FAR_MFARM
+WHERE FARM_CODE = $P{Farm}) AS f
+ON a.FLOC_FARM = f.FARM_CODE
+LEFT JOIN
+(SELECT INFO_HOUSE,SUM(CASE WHEN INFO_ITEM IN ($P{HCC2004},$P{HCC3004}) AND INFO_DISE = 'H01' THEN INFO_QTY ELSE 0 END) AS SM_HC01,
+SUM(CASE WHEN INFO_ITEM IN ($P{HCC2004},$P{HCC3004}) AND INFO_DISE = 'H02' THEN INFO_QTY ELSE 0 END) AS SM_HC02
+FROM FAR_MINFORM
+WHERE INFO_FARM = $P{Farm}
+AND INFO_BREED = $P{Breed}
+AND SUBSTR(INFO_DATE,7) || SUBSTR(INFO_DATE,4,2) || SUBSTR(INFO_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}
+GROUP BY INFO_HOUSE) AS g
+ON a.TRAN_HOUSE = g.INFO_HOUSE)
+WHERE GDD NOT NULL]]>
+	</queryString>
+	<field name="FLOC_FARM" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="FLOC_FARM"/>
+		<property name="com.jaspersoft.studio.field.label" value="FLOC_FARM"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_FLOCK"/>
+	</field>
+	<field name="FARM_NAME" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="FARM_NAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="FARM_NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_MFARM"/>
+	</field>
+	<field name="FLOC_CODE" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="FLOC_CODE"/>
+		<property name="com.jaspersoft.studio.field.label" value="FLOC_CODE"/>
+	</field>
+	<field name="TRAN_HOUSE" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="TRAN_HOUSE"/>
+		<property name="com.jaspersoft.studio.field.label" value="TRAN_HOUSE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_MTRANSECTION"/>
+	</field>
+	<field name="REC_DATE" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="REC_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="REC_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_FLOCK"/>
+	</field>
+	<field name="WK_DATE" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="WK_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="WK_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_FLOCK"/>
+	</field>
+	<field name="WEEK" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="WEEK"/>
+		<property name="com.jaspersoft.studio.field.label" value="WEEK"/>
+	</field>
+	<field name="AGE" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="AGE"/>
+		<property name="com.jaspersoft.studio.field.label" value="AGE"/>
+	</field>
+	<field name="SUM_DAY" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SUM_DAY"/>
+		<property name="com.jaspersoft.studio.field.label" value="SUM_DAY"/>
+	</field>
+	<field name="GDD" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="GDD"/>
+		<property name="com.jaspersoft.studio.field.label" value="GDD"/>
+	</field>
+	<field name="SM_FEED" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FEED"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FEED"/>
+	</field>
+	<field name="SM_FM010" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM010"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FM010"/>
+	</field>
+	<field name="SM_FM020" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM020"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FM020"/>
+	</field>
+	<field name="SM_FM030" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM030"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FM030"/>
+	</field>
+	<field name="SM_FM040" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM040"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FM040"/>
+	</field>
+	<field name="SM_FM050" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM050"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FM050"/>
+	</field>
+	<field name="SM_FM060" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM060"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FM060"/>
+	</field>
+	<field name="SM_FM070" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM070"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FM070"/>
+	</field>
+	<field name="SM_FM310" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM310"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FM310"/>
+	</field>
+	<field name="SM_FM320" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM320"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FM320"/>
+	</field>
+	<field name="SM_FM330" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM330"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_FM330"/>
+	</field>
+	<field name="BAL_PSF" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="BAL_PSF"/>
+		<property name="com.jaspersoft.studio.field.label" value="BAL_PSF"/>
+	</field>
+	<field name="BAL_PSM" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="BAL_PSM"/>
+		<property name="com.jaspersoft.studio.field.label" value="BAL_PSM"/>
+	</field>
+	<field name="SM_PCF" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_PCF"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_PCF"/>
+	</field>
+	<field name="SM_PCM" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_PCM"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_PCM"/>
+	</field>
+	<field name="SM_PDF" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_PDF"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_PDF"/>
+	</field>
+	<field name="SM_PDM" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_PDM"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_PDM"/>
+	</field>
+	<field name="LOSS_PSF" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="LOSS_PSF"/>
+		<property name="com.jaspersoft.studio.field.label" value="LOSS_PSF"/>
+	</field>
+	<field name="LOSS_PSM" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="LOSS_PSM"/>
+		<property name="com.jaspersoft.studio.field.label" value="LOSS_PSM"/>
+	</field>
+	<field name="LOSS_PCF" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="LOSS_PCF"/>
+		<property name="com.jaspersoft.studio.field.label" value="LOSS_PCF"/>
+	</field>
+	<field name="LOSS_PCM" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="LOSS_PCM"/>
+		<property name="com.jaspersoft.studio.field.label" value="LOSS_PCM"/>
+	</field>
+	<field name="LOSS_PDF" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="LOSS_PDF"/>
+		<property name="com.jaspersoft.studio.field.label" value="LOSS_PDF"/>
+	</field>
+	<field name="LOSS_PDM" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="LOSS_PDM"/>
+		<property name="com.jaspersoft.studio.field.label" value="LOSS_PDM"/>
+	</field>
+	<field name="SM_HC" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_HC"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_HC"/>
+	</field>
+	<field name="PC_HC" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="PC_HC"/>
+		<property name="com.jaspersoft.studio.field.label" value="PC_HC"/>
+	</field>
+	<field name="W_HCG" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="W_HCG"/>
+		<property name="com.jaspersoft.studio.field.label" value="W_HCG"/>
+	</field>
+	<field name="SM_HCG" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_HCG"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_HCG"/>
+	</field>
+	<field name="PC_HCG" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="PC_HCG"/>
+		<property name="com.jaspersoft.studio.field.label" value="PC_HCG"/>
+	</field>
+	<field name="SM_HCS" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_HCS"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_HCS"/>
+	</field>
+	<field name="PC_HCS" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="PC_HCS"/>
+		<property name="com.jaspersoft.studio.field.label" value="PC_HCS"/>
+	</field>
+	<field name="SM_HCD" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_HCD"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_HCD"/>
+	</field>
+	<field name="PC_HCD" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="PC_HCD"/>
+		<property name="com.jaspersoft.studio.field.label" value="PC_HCD"/>
+	</field>
+	<field name="SM_HCC" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="SM_HCC"/>
+		<property name="com.jaspersoft.studio.field.label" value="SM_HCC"/>
+	</field>
+	<field name="PC_HCC" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="PC_HCC"/>
+		<property name="com.jaspersoft.studio.field.label" value="PC_HCC"/>
+	</field>
+	<field name="H01" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="H01"/>
+		<property name="com.jaspersoft.studio.field.label" value="H01"/>
+	</field>
+	<field name="H02" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="H02"/>
+		<property name="com.jaspersoft.studio.field.label" value="H02"/>
+	</field>
+	<field name="HOUS_LASTMO" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="HOUS_LASTMO"/>
+		<property name="com.jaspersoft.studio.field.label" value="HOUS_LASTMO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_MHOUSE"/>
+	</field>
+	<variable name="TOTAL_SUM_DAY" class="java.lang.Integer" resetType="Group" resetGroup="SumFlock">
+		<variableExpression><![CDATA[$F{SUM_DAY}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="TOTAL_SM_FEED" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FEED}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_FM010" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM010}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_FM020" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM020}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_FM030" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM030}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_FM040" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM040}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_FM050" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM050}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_FM060" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM060}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_FM070" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM070}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_FM310" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM310}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_FM320" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM320}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_FM330" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM330}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_GPF" class="java.lang.Integer" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{BAL_PSF}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_GPM" class="java.lang.Integer" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{BAL_PSM}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_PCF" class="java.lang.Integer" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_PCF}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_PCM" class="java.lang.Integer" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_PCM}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_PDF" class="java.lang.Integer" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_PDF}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_PDM" class="java.lang.Integer" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_PDM}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SM_HC" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_HC}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_AVG_HC" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Average">
+		<variableExpression><![CDATA[$F{PC_HC}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_AVG_WHCG" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Average">
+		<variableExpression><![CDATA[$F{W_HCG}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_HCG" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_HCG}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_AVG_HCG" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Average">
+		<variableExpression><![CDATA[$F{PC_HCG}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_HCS" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_HCS}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_AVG_HCS" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Average">
+		<variableExpression><![CDATA[$F{PC_HCS}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_HCD" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_HCD}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_AVG_HCD" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Average">
+		<variableExpression><![CDATA[$F{PC_HCD}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_HCC" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_HCC}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_AVG_HCC" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Average">
+		<variableExpression><![CDATA[$F{PC_HCC}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_H01" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{H01}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_H02" class="java.math.BigDecimal" resetType="Group" resetGroup="SumFlock" calculation="Sum">
+		<variableExpression><![CDATA[$F{H02}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FEED" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FEED}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FM010" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM010}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FM020" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM020}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FM030" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM030}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FM040" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM040}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FM050" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM050}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FM060" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM060}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FM070" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM070}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FM310" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM310}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FM320" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM320}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_FM330" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_FM330}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_GPF" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{BAL_PSF}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_GPM" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{BAL_PSM}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_PCF" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_PCF}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_PCM" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_PCM}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_PDF" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_PDF}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_PDM" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_PDM}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SM_HC" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_HC}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_AVG_HC" class="java.math.BigDecimal" calculation="Average">
+		<variableExpression><![CDATA[$F{PC_HC}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_AVG_WHCG" class="java.math.BigDecimal" calculation="Average">
+		<variableExpression><![CDATA[$F{W_HCG}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SUM_HCG" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_HCG}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_AVG_HCG" class="java.math.BigDecimal" calculation="Average">
+		<variableExpression><![CDATA[$F{PC_HCG}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SUM_HCS" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_HCS}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_AVG_HCS" class="java.math.BigDecimal" calculation="Average">
+		<variableExpression><![CDATA[$F{PC_HCS}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SUM_HCD" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_HCD}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_AVG_HCD" class="java.math.BigDecimal" calculation="Average">
+		<variableExpression><![CDATA[$F{PC_HCD}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SUM_HCC" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_HCC}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_AVG_HCC" class="java.math.BigDecimal" calculation="Average">
+		<variableExpression><![CDATA[$F{PC_HCC}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SUM_H01" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{H01}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_SUM_H02" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{H02}]]></variableExpression>
+	</variable>
+	<group name="SumFlock">
+		<groupExpression><![CDATA[$F{FLOC_CODE}]]></groupExpression>
+		<groupFooter>
+			<band height="17">
+				<staticText>
+					<reportElement x="0" y="0" width="141" height="17" uuid="c5f5ad56-c011-47c4-8f8f-0dc1369dabf8"/>
+					<box>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Flock Total :]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement x="166" y="0" width="27" height="17" uuid="923d6cbb-683a-4555-baa6-557292ac1025"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FEED}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="193" y="0" width="21" height="17" uuid="1c01ce0a-0791-42cb-a254-96b74c617020"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FM010}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="214" y="0" width="21" height="17" uuid="bbe806d7-a9ec-4b2a-832d-add5a5e54f53"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FM020}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="235" y="0" width="21" height="17" uuid="22254135-bb61-4ea1-8b4b-e079de1a664f"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FM030}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="406" y="0" width="33" height="17" uuid="1631b0c8-3ede-48b8-936a-1a7d6f4a45db"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_GPF}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="439" y="0" width="32" height="17" uuid="2f175530-b473-43f0-8525-11fc61155080"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_GPM}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="471" y="0" width="20" height="17" uuid="ac922f5b-32e6-4e0f-a5b6-20f3311cfcad"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_PCF}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="491" y="0" width="19" height="17" uuid="34a85a97-517a-4bc1-a876-9fd93050ad76"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_PCM}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="510" y="0" width="20" height="17" uuid="dd54dbc3-e35e-4780-884f-3493cf9786b7"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_PDF}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0" isBlankWhenNull="true">
+					<reportElement x="530" y="0" width="23" height="17" uuid="4a51f54f-306f-4495-b556-27b2285d36a4"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_PDM}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="674" y="0" width="23" height="17" uuid="0d9d3c40-626d-4a9a-84c5-a5f3df280013"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_HC}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="141" y="0" width="25" height="17" uuid="51e3ea45-13fe-4724-9e99-bc467dcae57a"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FEED} > 0 ? (($V{TOTAL_SM_FEED} * 1000) / ($V{TOTAL_SM_GPF} + $V{TOTAL_SM_GPM} + $V{TOTAL_SM_PCF} + $V{TOTAL_SM_PCM} + $V{TOTAL_SM_PDF} + $V{TOTAL_SM_PDM})) / $V{TOTAL_SUM_DAY} : 0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="553" y="0" width="20" height="17" uuid="3ac22093-5774-4f62-9d50-02e06fc3080a"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{TOTAL_SM_PCF} + $V{TOTAL_SM_PDF}) > 0 ? (($V{TOTAL_SM_PCF} + $V{TOTAL_SM_PDF}) * 100) / ($V{TOTAL_SM_GPF} + $V{TOTAL_SM_PCF} + $V{TOTAL_SM_PDF}) : 0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="573" y="0" width="20" height="17" uuid="08f6458e-4407-4097-96e4-a4dc1df9e140"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{TOTAL_SM_PCM} + $V{TOTAL_SM_PDM}) > 0 ? (($V{TOTAL_SM_PCM} + $V{TOTAL_SM_PDM}) * 100) / ($V{TOTAL_SM_GPM} + $V{TOTAL_SM_PCM} + $V{TOTAL_SM_PDM}) : 0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="593" y="0" width="20" height="17" uuid="5523c2bf-e840-4a94-b96c-00e95a97b642"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_PCF} > 0 ? ($V{TOTAL_SM_PCF} * 100) / ($V{TOTAL_SM_GPF} + $V{TOTAL_SM_PCF} + $V{TOTAL_SM_PDF}) : 0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="613" y="0" width="20" height="17" uuid="402ecd62-f257-4900-812a-fad12e5ee764"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_PCM} > 0 ? ($V{TOTAL_SM_PCM} * 100) / ($V{TOTAL_SM_GPM} + $V{TOTAL_SM_PCM} + $V{TOTAL_SM_PDM}) : 0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="633" y="0" width="20" height="17" uuid="eebfc201-4e99-428b-8d7a-e392b2509508"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_PDF} > 0 ? ($V{TOTAL_SM_PDF} * 100) / ($V{TOTAL_SM_GPF} + $V{TOTAL_SM_PCF} + $V{TOTAL_SM_PDF}) : 0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="653" y="0" width="21" height="17" uuid="dfa76620-ddce-400b-9025-ff91ae16dc20"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_PDM} > 0 ? ($V{TOTAL_SM_PDM} * 100) / ($V{TOTAL_SM_GPM} + $V{TOTAL_SM_PCM} + $V{TOTAL_SM_PDM}) : 0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="697" y="0" width="20" height="17" uuid="43472300-c121-4e0b-b4a1-b8909dae910b"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_HC} > 0 ? (($V{TOTAL_SM_HC} / ($V{TOTAL_SM_GPF} + $V{TOTAL_SM_PCF} + $V{TOTAL_SM_PDF})) / $F{SUM_DAY}) * 100 : 0]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="332" y="0" width="23" height="17" uuid="59ce28d6-cd20-4fc6-9c05-5165e4913bbe"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FM310}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="307" y="0" width="25" height="17" uuid="1416ef75-68c3-4651-bdc6-664855ca44b6"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FM070}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="282" y="0" width="25" height="17" uuid="0ef47a8f-6feb-48e1-818f-2153082a5659"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FM060}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="256" y="0" width="26" height="17" uuid="eb26ef34-3de6-4c8a-be44-40c5c1aed211"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FM050}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="381" y="0" width="25" height="17" uuid="da60b6bb-7d0c-4736-aa67-b05904d92aeb"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FM330}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="355" y="0" width="26" height="17" uuid="9044ea0e-4cae-4b16-9813-5e355a21a273"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_SM_FM320}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="74" splitType="Stretch">
+			<staticText>
+				<reportElement x="256" y="0" width="274" height="22" forecolor="#990000" uuid="acbfdd9b-87aa-4cfd-8f8b-b093853150a4"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BANGKOK RANCH PUBLIC CO.,LTD.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="381" y="44" width="25" height="14" uuid="a6f32f27-5f45-476e-b658-2681b416ecbf"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[To :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="282" y="58" width="50" height="16" uuid="a957d081-5122-4591-adc1-2b24c9a1b652"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Farm :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="282" y="44" width="50" height="14" uuid="eaff8bcf-ece9-4011-93fb-d0ce1dd47ad6"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="753" y="0" width="50" height="22" uuid="287db53a-93f6-4422-9695-634e2f365482"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FO-PS03-012]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="58" width="41" height="16" uuid="6a2d9b0e-724c-4baa-b192-14424b113a77"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BR01R004]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="74" height="58" uuid="099875a2-4a95-4c90-a826-beb65521ed2d"/>
+				<imageExpression><![CDATA["\\img\\logo\\icon.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="332" y="44" width="49" height="14" uuid="e370a23c-e3ba-417b-b59b-8da336a66e07"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{StartDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="406" y="44" width="104" height="14" uuid="41b2670e-4709-4af4-9d11-ecdd0eb7a87a"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EndDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="256" y="22" width="235" height="22" forecolor="#990000" uuid="0722687d-abe1-486b-a74d-4cf4aacb9839"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Weekly Report (รายงานประจำสัปดาห์)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="332" y="58" width="23" height="16" uuid="9249d0b7-a8fc-49a4-9d8a-9417d6f12f37"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{FLOC_FARM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="355" y="58" width="116" height="16" uuid="033d1f39-2591-4bc0-a48d-06527b25b478"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{FARM_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="491" y="22" width="102" height="22" forecolor="#990000" uuid="7926edcd-23b5-4d68-9007-95250b21ed83"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Breed}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="69" splitType="Stretch">
+			<staticText>
+				<reportElement x="18" y="0" width="23" height="69" uuid="68e0111f-87a8-4bad-9f8a-d54ea6b287a9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[House]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="107" y="0" width="34" height="16" uuid="999b5325-6bb4-4b57-86d5-d8405ce2d218"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Age]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="107" y="16" width="16" height="53" uuid="fc46669e-4d3d-40ea-a758-16e99d416e4c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[W
+E
+E
+K]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="141" y="49" width="25" height="20" backcolor="#FFFFCC" uuid="3f68e272-8a90-4237-917e-4d0ca6768c1b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[G/D/D]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="166" y="49" width="27" height="20" backcolor="#FFFFCC" uuid="c1c93fdb-f031-4dfc-aa30-84c09110cf32"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ttl.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="193" y="49" width="21" height="20" backcolor="#FFFFCC" uuid="dcc87147-af42-4862-af0b-9a6a970518d8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#31]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="141" y="0" width="265" height="49" backcolor="#FFFFCC" uuid="c35109be-3b4f-4b83-ac67-0444132129c4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Feed (Kgs.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="406" y="0" width="147" height="49" backcolor="#CCFFCC" uuid="04d93e86-2f1f-4757-91d5-e2d0319cb812"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Duck (Pcs.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="406" y="49" width="33" height="20" backcolor="#CCFFCC" uuid="34df3eba-ff18-466d-b1e7-5fe6d204b7dc"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bal  CMF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="439" y="49" width="32" height="20" backcolor="#CCFFCC" uuid="e627b082-4d2f-4418-b9ee-4c9a304dd9e2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bal CMM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="471" y="49" width="20" height="20" backcolor="#CCFFCC" uuid="56140d69-760d-4102-82d1-ca4ad2b26e72"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PCF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="491" y="49" width="19" height="20" backcolor="#CCFFCC" uuid="8a920aff-b220-46ab-9cb4-5dae7d4cddd6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PCM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="510" y="49" width="20" height="20" backcolor="#CCFFCC" uuid="55c92f96-5d6f-4e83-9c09-8f7038413bba"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PDF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="530" y="49" width="23" height="20" backcolor="#CCFFCC" uuid="15c8fbfc-b244-4d90-a4ed-59599ec8382d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PDM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="674" y="0" width="43" height="49" backcolor="#CCFFFF" uuid="7735c415-3da9-4bec-96ab-28e00e586419"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Production]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="697" y="49" width="20" height="20" backcolor="#CCFFFF" uuid="93e3db0d-2e2d-4403-9d6a-c874cf14bf51"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="674" y="49" width="23" height="20" backcolor="#CCFFFF" uuid="1d212e6e-1cd5-42a2-b0dd-084b1d50d66d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HC Ttl.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="214" y="49" width="21" height="20" backcolor="#FFFFCC" uuid="554cb8b7-2451-46b0-a705-e4d732a49ff1"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#32]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="235" y="49" width="21" height="20" backcolor="#FFFFCC" uuid="42f95b85-1ba5-40aa-99ea-e1af8f06da63"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#33]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="717" y="0" width="62" height="69" uuid="2c5d01d8-ac43-4d6d-b6df-10326268575e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="553" y="49" width="20" height="20" backcolor="#CCFFCC" uuid="76aa30ce-32c0-4d30-b88a-3cab36615b5b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loss CMF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="593" y="49" width="20" height="20" backcolor="#CCFFCC" uuid="8fddd066-dced-4b5b-a96a-e2b1133f0c79"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loss PCF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="573" y="49" width="20" height="20" backcolor="#CCFFCC" uuid="1acc8e0b-ac65-43fc-9dbf-3052b02ffb00"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loss CMM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="553" y="0" width="121" height="49" backcolor="#CCFFCC" uuid="2f2e097b-3421-47f6-bdc7-e401366ebe78"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loss (%)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="653" y="49" width="21" height="20" backcolor="#CCFFCC" uuid="d3995834-7432-4f2e-9aa1-7c6d346d5e6c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loss PDM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="633" y="49" width="20" height="20" backcolor="#CCFFCC" uuid="79648025-80ee-4b93-a595-cb0c07776d56"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loss PDF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="613" y="49" width="20" height="20" backcolor="#CCFFCC" uuid="09c390ef-afce-4198-9234-122f2ae76dfb"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loss PCM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="0" width="33" height="69" uuid="fac0a8d6-affc-4862-a715-93ce5538768c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Received Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="74" y="0" width="33" height="69" uuid="8aa9079c-8071-48ed-a2e0-0885beee1e2b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Start Week]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="18" height="69" uuid="66c59a53-f3e2-4944-8b75-f88f7d5ba24b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F
+L
+O
+C
+K]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="123" y="16" width="18" height="53" uuid="17202f72-cf2a-417a-9e22-b9087b85de57"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[D
+A
+Y]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="256" y="49" width="26" height="20" backcolor="#FFFFCC" uuid="945fcfdd-fb1b-42b1-878d-e6ea5608983b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#41]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="282" y="49" width="25" height="20" backcolor="#FFFFCC" uuid="a3e0bdee-0b02-4c25-8cb6-e14bba81ed60"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#42]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="307" y="49" width="25" height="20" backcolor="#FFFFCC" uuid="1d7ff4fe-3901-4f15-ba10-e31433d80249"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#43]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="332" y="49" width="23" height="20" backcolor="#FFFFCC" uuid="b1ee8b17-9547-4d3b-899d-2fd586881af4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#21]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="355" y="49" width="26" height="20" backcolor="#FFFFCC" uuid="0b21d84c-a27b-4232-a2df-6e496aaa710d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#22]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="381" y="49" width="25" height="20" backcolor="#FFFFCC" uuid="1b34ca70-0187-4096-a8ed-f40b4373a953"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#23]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="18" height="17" printWhenGroupChanges="SumFlock" uuid="f9a94c02-3ae7-48d2-89fd-a4c12529c7ff"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{FLOC_CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="18" y="0" width="23" height="17" uuid="9f4c4839-ab61-4e6d-8471-1b3c55f74c8f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{TRAN_HOUSE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="41" y="0" width="33" height="17" uuid="54f8609c-8c74-4291-9e4e-c535a8bd3733"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{REC_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="74" y="0" width="33" height="17" uuid="1927a0b4-4da0-4487-b6fe-3bbd2a6de16d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{WK_DATE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="107" y="0" width="16" height="17" uuid="0a96d87b-c9d1-45de-99f1-897f166a204b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{WEEK}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="123" y="0" width="18" height="17" uuid="484ccc5a-cdd5-4d98-90d3-60d310c3925e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{AGE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="141" y="0" width="25" height="17" uuid="8d5cc4d5-ca61-4b49-84e8-4399920ad432"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GDD} == 0? null : ""+$F{GDD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="166" y="0" width="27" height="17" uuid="be6bd7d6-086f-4e54-a5a5-9532e3af8024"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_FEED} == 0? null : ""+$F{SM_FEED}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="193" y="0" width="21" height="17" uuid="3960b69b-e3e5-4e54-8b3e-4bd774dc786b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_FM010} == 0? null : ""+$F{SM_FM010}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="214" y="0" width="21" height="17" uuid="ad8bb1e0-b9fc-47b8-b745-6c645c635c45"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_FM020} == 0? null : ""+$F{SM_FM020}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="235" y="0" width="21" height="17" uuid="4875490b-891f-4226-9f56-63f245161e59"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_FM030} == 0? null : ""+$F{SM_FM030}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="553" y="0" width="20" height="17" uuid="37c1866a-5c5b-4184-b6fe-e3ecae56c611"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOSS_PSF} == 0? null : ""+$F{LOSS_PSF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="439" y="0" width="32" height="17" uuid="2ad0267a-3472-4fca-bfbb-6d780b8e17ab"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BAL_PSM} == 0? null : ""+$F{BAL_PSM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="593" y="0" width="20" height="17" uuid="9825b5fa-1f8e-40ef-a5d8-801343bc087d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOSS_PCF} == 0? null : ""+$F{LOSS_PCF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="613" y="0" width="20" height="17" uuid="06a38ecd-46ac-40b7-b115-f69d766f7178"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOSS_PCM} == 0? null : ""+$F{LOSS_PCM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="633" y="0" width="20" height="17" uuid="6544f57a-8ee8-47b8-af9c-b4c119c63e03"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOSS_PDF} == 0? null : ""+$F{LOSS_PDF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="653" y="0" width="21" height="17" uuid="34b97a74-b6a8-44ef-9c0c-ea4e4ccaed43"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOSS_PDM} == 0? null : ""+$F{LOSS_PDM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="573" y="0" width="20" height="17" uuid="7829d68e-4af6-41a9-9b64-34e4ccbd6e5b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOSS_PSM} == 0? null : ""+$F{LOSS_PSM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="406" y="0" width="33" height="17" uuid="fe978861-7724-4874-9dff-46f4d0d0d3d2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BAL_PSF} == 0? null : ""+$F{BAL_PSF}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="471" y="0" width="20" height="17" uuid="275bc054-4a65-44e5-9259-80fcec115c72"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_PCF} == 0? null : ""+$F{SM_PCF}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="491" y="0" width="19" height="17" uuid="b5d29c29-3cf7-4a3f-8883-2c318d487f36"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_PCM} == 0? null : ""+$F{SM_PCM}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="510" y="0" width="20" height="17" uuid="67f0a5ae-75cb-4346-80c0-cabf3fa8ff5f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_PDF} == 0? null : ""+$F{SM_PDF}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="530" y="0" width="23" height="17" uuid="621231bb-0aa0-482b-ac9e-5fa1d7cbb172"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_PDM} == 0? null : ""+$F{SM_PDM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="717" y="0" width="62" height="17" uuid="95291798-217e-4afa-af95-6ae6e910ce21"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{HOUS_LASTMO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="674" y="0" width="23" height="17" uuid="2db5f8a6-cc67-41c2-bea6-75d4fa4a5f0e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_HC} == 0? null : ""+$F{SM_HC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="697" y="0" width="20" height="17" uuid="638ece49-6c04-47d1-a0bb-96287c30256f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PC_HC} == 0? null : ""+$F{PC_HC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="256" y="0" width="26" height="17" uuid="d5e834fc-aed6-4a4a-8066-bc86af4dec9d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_FM050} == 0? null : $F{SM_FM050}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="282" y="0" width="25" height="17" uuid="a7a8660e-25b0-4891-8498-3f83014d550c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_FM060} == 0? null : $F{SM_FM060}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="307" y="0" width="25" height="17" uuid="9d103893-d4d8-4bd5-a3dd-343a258ddf93"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_FM070} == 0? null : $F{SM_FM070}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="332" y="0" width="23" height="17" uuid="0b15266b-914d-43e0-bbdd-a94c157be380"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_FM310} == 0? null :$F{SM_FM310}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="355" y="0" width="26" height="17" uuid="4a8f41cf-f652-43eb-9ad4-19af8e454434"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_FM320} == 0? null : $F{SM_FM320}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="381" y="0" width="25" height="17" uuid="963fe94d-7ce0-4bf6-876a-313b08d172a6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_FM330} == 0? null : $F{SM_FM330}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="18" height="17" uuid="e558d001-af64-4d97-a172-0082825cc37e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="86">
+			<textField evaluationTime="Report">
+				<reportElement x="779" y="60" width="24" height="26" uuid="4ec06577-251e-4ff5-bd7a-d78847ecd446"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="674" y="60" width="43" height="26" uuid="0b8420a5-2686-46d3-9ab0-2d4ee4af1893"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="15"/>
+				</textElement>
+				<text><![CDATA[Page]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="256" y="30" width="99" height="31" uuid="d9a7c466-b007-4521-b7a9-f9338e3c9bf4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Giver}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="753" y="60" width="26" height="26" uuid="d4542298-c214-4543-aec8-7f525b864ff1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="15"/>
+				</textElement>
+				<text><![CDATA[Of]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="439" y="0" width="71" height="29" uuid="3c06f029-6797-4966-bf4d-6bd80683f9a3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="18"/>
+				</textElement>
+				<text><![CDATA[ผู้ตรวจสอบ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="193" y="0" width="42" height="29" uuid="b278b374-3462-4fa4-91f8-f1d1adf95423"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="18"/>
+				</textElement>
+				<text><![CDATA[ผู้จัดทำ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="717" y="60" width="36" height="26" uuid="5214c409-f1b1-44b4-8c4a-6837bf856a5a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="d MMM yyyy">
+				<reportElement x="41" y="61" width="100" height="25" uuid="9c6e444d-ff51-48b5-90c1-e2c2c505eeab"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="0" y="61" width="41" height="25" uuid="2acdd76e-8b3a-47c6-a769-565030c5397d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="15"/>
+				</textElement>
+				<text><![CDATA[Issue:2/]]></text>
+			</staticText>
+			<line>
+				<reportElement x="510" y="29" width="164" height="1" uuid="2a794900-f769-4455-aab2-3e13b1e69279"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="235" y="29" width="146" height="1" uuid="36ed3537-825b-4c4e-ad9d-54b732aa349e"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="530" y="30" width="103" height="31" uuid="d86b4725-41c4-4092-b7da-406cee2e11e2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Approver}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="18">
+			<staticText>
+				<reportElement x="0" y="0" width="141" height="18" uuid="7c2a04e8-fb49-40a6-b1cd-f1f2bf39bf55"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Farm Total :]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="166" y="0" width="27" height="18" uuid="0422d03a-a185-4a10-bde0-3167cf455d03"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FEED}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="193" y="0" width="21" height="18" uuid="c429c20b-7227-42d9-9ab7-e5b242989132"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FM010}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="214" y="0" width="21" height="18" uuid="c1f25b0a-04e4-4d7f-b012-4848eecd474f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FM020}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="235" y="0" width="21" height="18" uuid="71d36b6a-9945-4b8b-a8ff-b837647126fc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FM030}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="406" y="0" width="33" height="18" uuid="ab5da854-c545-49b6-899b-a89e11077754">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_GPF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="439" y="0" width="32" height="18" uuid="daa67522-8078-424c-a658-86f6240223d0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_SM_GPM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="471" y="0" width="20" height="18" uuid="2116be5f-15be-47ca-94e3-761c993487cc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_PCF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="491" y="0" width="19" height="18" uuid="874a23c1-5401-455a-9c11-f5c940ccaf7c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_PCM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="530" y="0" width="23" height="18" uuid="ff75aa05-2915-49d6-8991-d85035e186a7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_PDM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="510" y="0" width="20" height="18" uuid="96494153-08e4-43bd-b2b2-ea7b036fa4da">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_PDF}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="674" y="0" width="23" height="18" uuid="3c777d48-2307-487b-a2e1-74569852c009">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_HC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="141" y="0" width="25" height="18" uuid="3eae25eb-cc15-4694-a036-dd1eabe02dd7"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FEED} > 0 ? (($V{GTOTAL_SM_FEED} * 1000) / ($V{GTOTAL_SM_GPF} + $V{GTOTAL_SM_GPM} + $V{GTOTAL_SM_PCF} + $V{GTOTAL_SM_PCM} + $V{GTOTAL_SM_PDF} + $V{GTOTAL_SM_PDM})) / $V{TOTAL_SUM_DAY} : 0]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="553" y="0" width="20" height="18" uuid="b9ff9ed0-7409-4352-965c-9140d3a6c499">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($V{GTOTAL_SM_PCF} + $V{GTOTAL_SM_PDF}) > 0 ? (($V{GTOTAL_SM_PCF} + $V{GTOTAL_SM_PDF}) * 100) / ($V{GTOTAL_SM_GPF} + $V{GTOTAL_SM_PCF} + $V{GTOTAL_SM_PDF}) : 0]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="573" y="0" width="20" height="18" uuid="00b6be8a-33f0-47b1-b3cc-ac77270fb733">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($V{GTOTAL_SM_PCM} + $V{GTOTAL_SM_PDM}) > 0 ? (($V{GTOTAL_SM_PCM} + $V{GTOTAL_SM_PDM}) * 100) / ($V{GTOTAL_SM_GPM} + $V{GTOTAL_SM_PCM} + $V{GTOTAL_SM_PDM}) : 0]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="593" y="0" width="20" height="18" uuid="a4bef2c0-96b2-4dda-bca0-6e0129a6e2ac">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_PCF} > 0 ? ($V{GTOTAL_SM_PCF} * 100) / ($V{GTOTAL_SM_GPF} + $V{GTOTAL_SM_PCF} + $V{GTOTAL_SM_PDF}) : 0]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="613" y="0" width="20" height="18" uuid="08de94e8-8b1a-4e3c-a4a4-8f3ec91eca20">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_PCM} > 0 ? ($V{GTOTAL_SM_PCM} * 100) / ($V{GTOTAL_SM_GPM} + $V{GTOTAL_SM_PCM} + $V{GTOTAL_SM_PDM}) : 0]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="633" y="0" width="20" height="18" uuid="b4042b84-6100-46f2-97e9-aeabfac368c9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_PCM} > 0 ? ($V{GTOTAL_SM_PCM} * 100) / ($V{GTOTAL_SM_GPM} + $V{GTOTAL_SM_PCM} + $V{GTOTAL_SM_PDM}) : 0]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="653" y="0" width="21" height="18" uuid="de11ce78-7aa8-4672-bc4e-971196844c6e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_PDM} > 0 ? ($V{GTOTAL_SM_PDM} * 100) / ($V{GTOTAL_SM_GPM} + $V{GTOTAL_SM_PCM} + $V{GTOTAL_SM_PDM}) : 0]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="697" y="0" width="20" height="18" uuid="534a1c97-377f-44dc-9a7a-3751c25862a7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_HC} > 0 ? (($V{GTOTAL_SM_HC} / ($V{GTOTAL_SM_GPF} + $V{GTOTAL_SM_PCF} + $V{GTOTAL_SM_PDF})) / $F{SUM_DAY}) * 100 : 0]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="282" y="0" width="25" height="18" uuid="81d91f64-b2d1-4af9-b1ed-4c7e7a85bb0f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FM060}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="332" y="0" width="23" height="18" uuid="2100b07b-cd45-4358-a287-d309d9589375">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FM310}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="307" y="0" width="25" height="18" uuid="c543fd23-5cfa-4a81-b7a0-f5f1181882f2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FM070}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="256" y="0" width="26" height="18" uuid="fd5642cd-a047-46be-8f74-24dd3f2a3b86">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FM050}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="355" y="0" width="26" height="18" uuid="3bf0621c-3fa7-4344-8403-77f50a24adde">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FM320}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="381" y="0" width="25" height="18" uuid="f41f58f4-e701-4fc9-8c35-eb85028054c5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_SM_FM330}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BF01R012" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffd84165-eee5-4a4c-889a-7fb0c0510697">
+	<property name="ireport.zoom" value="1.7715610000000879"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="Farm" class="java.lang.String"/>
+	<parameter name="Breed" class="java.lang.String"/>
+	<parameter name="StartDate" class="java.lang.String"/>
+	<parameter name="SUBHC" class="java.lang.String"/>
+	<parameter name="BREF" class="java.lang.String"/>
+	<parameter name="BREM" class="java.lang.String"/>
+	<parameter name="EndDate" class="java.lang.String"/>
+	<parameter name="HCG001" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HCD002" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HCS003" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HCC004" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT a.TRAN_DATE,TRAN_FARM,FARM_NAME,COALESCE(BAL_PSF,0) AS BAL_PSF,HCG,HCD,HCS,HCC,HCG + HCD + HCS + HCC AS TOTAL
+FROM
+(SELECT DISTINCT TRAN_DATE,TRAN_FARM,FARM_NAME
+FROM FAR_MTRANSECTION,FAR_MITEM,FAR_MFARM
+WHERE TRAN_FARM = $P{Farm}
+AND TRAN_BREED = $P{Breed}
+AND TRAN_FARM = ITEM_FARM
+AND TRAN_FARM = FARM_CODE
+AND TRAN_TYPE = 'WOP'
+AND SUBSTR(TRAN_ITEM,0,6) = $P{SUBHC}) AS a
+INNER JOIN
+(SELECT INVE_DATE,SUM(INVE_BALANCE) AS BAL_PSF
+FROM FAR_DINVENBAL,FAR_MITEM
+WHERE INVE_ITEM = ITEM_CODE
+AND ITEM_CODE IN ($P{BREF},$P{BREM})
+GROUP BY INVE_DATE) AS b
+ON a.TRAN_DATE = b.INVE_DATE
+INNER JOIN
+(SELECT DISTINCT TRAN_DATE,COALESCE(SUM(CASE WHEN TRAN_ITEM = $P{HCG001} THEN TRAN_QTY END),0) AS HCG,
+COALESCE(SUM(CASE WHEN TRAN_ITEM = $P{HCD002} THEN TRAN_QTY END),0) AS HCD,
+COALESCE(SUM(CASE WHEN TRAN_ITEM = $P{HCS003} THEN TRAN_QTY END),0) AS HCS,
+COALESCE(SUM(CASE WHEN TRAN_ITEM = $P{HCC004} THEN TRAN_QTY END),0) AS HCC
+FROM FAR_MTRANSECTION
+WHERE TRAN_FARM = $P{Farm}
+AND TRAN_BREED = $P{Breed}
+AND TRAN_TYPE = 'WOP'
+GROUP BY TRAN_DATE) AS c
+ON a.TRAN_DATE = c.TRAN_DATE
+WHERE SUBSTR(a.TRAN_DATE,7) || SUBSTR(a.TRAN_DATE,4,2) || SUBSTR(a.TRAN_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}]]>
+	</queryString>
+	<field name="TRAN_DATE" class="java.lang.Object"/>
+	<field name="TRAN_FARM" class="java.lang.Object"/>
+	<field name="FARM_NAME" class="java.lang.Object"/>
+	<field name="BAL_PSF" class="java.lang.Integer"/>
+	<field name="HCG" class="java.lang.Integer"/>
+	<field name="HCD" class="java.lang.Integer"/>
+	<field name="HCS" class="java.lang.Integer"/>
+	<field name="HCC" class="java.lang.Integer"/>
+	<field name="TOTAL" class="java.lang.Integer"/>
+	<variable name="GTOTAL_HCG" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{HCG}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_HCD" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{HCD}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_HCS" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{HCS}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_HCC" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{HCC}]]></variableExpression>
+	</variable>
+	<variable name="GTOTAL_TOTAL" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="72" splitType="Stretch">
+			<staticText>
+				<reportElement x="143" y="0" width="273" height="22" forecolor="#990000" uuid="acbfdd9b-87aa-4cfd-8f8b-b093853150a4"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BANGKOK RANCH PUBLIC CO.,LTD.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="44" width="20" height="14" uuid="a6f32f27-5f45-476e-b658-2681b416ecbf"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[To :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="173" y="58" width="38" height="14" uuid="a957d081-5122-4591-adc1-2b24c9a1b652"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Farm :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="173" y="44" width="38" height="14" uuid="eaff8bcf-ece9-4011-93fb-d0ce1dd47ad6"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="58" width="55" height="14" uuid="6a2d9b0e-724c-4baa-b192-14424b113a77"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BR01R012]]></text>
+			</staticText>
+			<image>
+				<reportElement x="1" y="1" width="110" height="57" uuid="099875a2-4a95-4c90-a826-beb65521ed2d"/>
+				<imageExpression><![CDATA["\\img\\logo\\icon.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="213" y="44" width="67" height="14" uuid="e370a23c-e3ba-417b-b59b-8da336a66e07"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{StartDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="122" y="22" width="305" height="22" forecolor="#990000" uuid="e34df077-b2e0-4e0d-9b3d-d2b284977eba"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Egg Transfer to Hatchery Report (รายงานการส่งไข่)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="302" y="44" width="100" height="14" uuid="098f0e4e-2387-4047-8bd1-7706eb83fb3d"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EndDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="213" y="58" width="20" height="14" uuid="e44c40a0-a91f-43f9-8fd9-7d390c4429f1"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{TRAN_FARM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="234" y="58" width="100" height="14" uuid="c11cb9d6-e1e2-4e0c-b9ae-0ee73f125b8f"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{FARM_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="419" y="22" width="100" height="22" forecolor="#990000" uuid="86daee54-d709-44ec-b09c-3a2e6ea4aa1e"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Breed}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="38" splitType="Stretch">
+			<line>
+				<reportElement x="1" y="37" width="553" height="1" uuid="f7657411-2e47-4d05-a314-d6f28932b0f3"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="14" width="57" height="14" uuid="68e0111f-87a8-4bad-9f8a-d54ea6b287a9"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="1" width="554" height="1" uuid="4c5bc8ef-73ff-4171-9693-6a9ee3da985c"/>
+			</line>
+			<line>
+				<reportElement x="0" y="1" width="1" height="36" uuid="1d09f5fc-5c23-45ea-8f9b-e9710ce43907"/>
+			</line>
+			<line>
+				<reportElement x="470" y="1" width="1" height="36" uuid="baaea4a2-12cc-4a0c-88de-fbd4c9ccae61"/>
+			</line>
+			<line>
+				<reportElement x="124" y="20" width="430" height="1" uuid="a24f1829-280e-42b4-b653-b2e8f5cf1edc"/>
+			</line>
+			<line>
+				<reportElement x="57" y="2" width="1" height="35" uuid="0638e58e-3d95-487d-a5e4-797d4497cc92"/>
+			</line>
+			<line>
+				<reportElement x="554" y="2" width="1" height="35" uuid="8c58d035-0c40-49b7-9dca-429fe8fdab96"/>
+			</line>
+			<line>
+				<reportElement x="379" y="2" width="1" height="35" uuid="ec63f1a3-2c84-47e5-8dcb-35478cb63095"/>
+			</line>
+			<line>
+				<reportElement x="293" y="2" width="1" height="35" uuid="bf3b5164-db70-4736-ad24-462e711e67fd"/>
+			</line>
+			<staticText>
+				<reportElement x="59" y="14" width="62" height="14" uuid="fac0a8d6-affc-4862-a715-93ce5538768c"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bal PSF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="294" y="21" width="84" height="14" uuid="a4559215-dd9c-485b-ab5e-2f1811f7fd12"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HCS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="21" width="89" height="14" uuid="66cce916-6c3b-41c2-bd33-9d584f187ea2"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HCC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="471" y="5" width="82" height="14" uuid="8bfae819-e4d0-4ce1-8c0f-642050f81524"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="21" width="78" height="14" uuid="6c9e73b5-e033-4f4f-8752-042281537037"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HCG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="204" y="21" width="88" height="14" uuid="63e5ee7f-c576-4e43-95ed-62f1af7c4974"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HCD]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="124" y="5" width="78" height="14" uuid="80b52174-69a2-4903-aaa1-95fae4ed3eb3"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{HCG001}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="204" y="5" width="88" height="14" uuid="0b38f22b-9d53-4cec-9175-d007d1e0ce44"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{HCD002}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="294" y="5" width="84" height="14" uuid="25c1cc67-c88e-49b5-98fe-8bcd1ab3f260"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{HCS003}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="5" width="89" height="14" uuid="c4adb5a6-b690-4b49-909f-9893e91ef1f5"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{HCC004}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="122" y="2" width="1" height="36" uuid="52d36ad5-eebc-4e6d-b049-7817227328be"/>
+			</line>
+			<line>
+				<reportElement x="203" y="2" width="1" height="36" uuid="fe22394a-89f1-41c2-9e53-fa41b4fce0fb"/>
+			</line>
+			<staticText>
+				<reportElement x="471" y="21" width="82" height="14" uuid="3e6f734e-e306-4ac4-8e4f-b095f5e689ea"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HCG + HCD + HCS + HCC]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="-1" width="1" height="15" uuid="63a64d1b-5873-4315-8b8e-a8687354947c"/>
+			</line>
+			<line>
+				<reportElement x="470" y="-1" width="1" height="15" uuid="08144750-2f95-400e-855a-2a01320030aa"/>
+			</line>
+			<line>
+				<reportElement x="1" y="13" width="553" height="1" uuid="e077e2fd-88b8-44e8-9dc8-579ba37235e0"/>
+			</line>
+			<line>
+				<reportElement x="203" y="-1" width="1" height="14" uuid="b219ae25-0df1-48e0-b74d-5acb11fc5668"/>
+			</line>
+			<line>
+				<reportElement x="122" y="0" width="1" height="13" uuid="f162eceb-ab33-42a4-90b6-2d97fcb3c303"/>
+			</line>
+			<line>
+				<reportElement x="57" y="0" width="1" height="13" uuid="c55422e2-ede4-437a-bbae-bf2cef623049"/>
+			</line>
+			<line>
+				<reportElement x="293" y="0" width="1" height="14" uuid="9dca949c-4e27-443b-b2c0-78203e51f195"/>
+			</line>
+			<line>
+				<reportElement x="379" y="0" width="1" height="14" uuid="ff131ce9-db44-4ba7-a6b4-ec162c012cf8"/>
+			</line>
+			<line>
+				<reportElement x="554" y="-1" width="1" height="15" uuid="b0e46a1a-abcd-4a1a-976d-c20febae3f8b"/>
+			</line>
+			<textField>
+				<reportElement x="2" y="0" width="54" height="13" uuid="b2558e99-1175-425d-8fb2-c5edab51c689"/>
+				<textElement>
+					<font fontName="TH SarabunPSK"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{TRAN_DATE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="59" y="0" width="62" height="13" uuid="4ca1a8c7-5564-4a10-b5c6-dd47facf287e"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{BAL_PSF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="125" y="0" width="77" height="13" uuid="30077c87-9452-45de-acec-9211d75769c8"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{HCG}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="204" y="0" width="88" height="13" uuid="162c96a9-7a6f-4c15-bd8e-e82904a40b75"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{HCD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="294" y="0" width="84" height="13" uuid="a49a8d23-bce4-48b8-b697-6f56d461ffff"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{HCS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="379" y="0" width="90" height="13" uuid="938f20d4-902c-4e4a-96de-60a2843e8bf9"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{HCC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="470" y="0" width="83" height="13" uuid="007a555a-c2a1-4e6f-bc4f-c334f37ef839"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""+$F{TOTAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="16">
+			<line>
+				<reportElement x="0" y="0" width="1" height="14" uuid="a6ab25df-2c35-4fd5-97de-e1636930ea4b"/>
+			</line>
+			<line>
+				<reportElement x="470" y="0" width="1" height="14" uuid="42d676f5-f23b-4d86-9695-3af182aa65b2"/>
+			</line>
+			<line>
+				<reportElement x="0" y="14" width="555" height="1" uuid="d1069564-be37-4b06-9539-da7256fcd37c"/>
+			</line>
+			<line>
+				<reportElement x="379" y="0" width="1" height="14" uuid="ffd4d04d-42cd-4226-bce2-740735c9744c"/>
+			</line>
+			<line>
+				<reportElement x="554" y="0" width="1" height="14" uuid="070e066a-5fcd-47bb-87f0-e7b34cc1d0d4"/>
+			</line>
+			<staticText>
+				<reportElement x="3" y="0" width="83" height="14" uuid="7c2a04e8-fb49-40a6-b1cd-f1f2bf39bf55"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Farm Total :]]></text>
+			</staticText>
+			<line>
+				<reportElement x="203" y="-1" width="1" height="15" uuid="cc0a1cf4-c835-4557-abd2-2674bed97f73"/>
+			</line>
+			<line>
+				<reportElement x="293" y="0" width="1" height="14" uuid="f3a80107-2206-41a9-8b0f-cd7d4c038a85"/>
+			</line>
+			<line>
+				<reportElement x="122" y="0" width="1" height="15" uuid="aba1f680-6823-4c13-8e4c-02124e778067"/>
+			</line>
+			<textField pattern="#,##0">
+				<reportElement x="125" y="0" width="77" height="14" uuid="72371b80-a7f9-4fc2-9bae-1d890a000ca2"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_HCG}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="204" y="0" width="88" height="14" uuid="002b838c-f27c-43f6-9c79-101871e948b0"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_HCD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="294" y="0" width="83" height="14" uuid="c6cc3740-3615-47e1-8982-daa7beec94de"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_HCS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="380" y="0" width="89" height="14" uuid="13a91285-3890-4f64-a163-c1a523c1b037"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_HCC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="471" y="0" width="82" height="14" uuid="7f047d8d-c1c7-4fee-a554-11d8840b5fd3"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{GTOTAL_TOTAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
