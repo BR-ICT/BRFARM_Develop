@@ -238,7 +238,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Update : 12/06/2024 V.01"/>
+        <Property name="text" type="java.lang.String" value="Update : 23/01/2025"/>
       </Properties>
     </Component>
     <Component class="java.awt.Button" name="btnupdate">

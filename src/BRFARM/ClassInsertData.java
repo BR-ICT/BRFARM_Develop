@@ -1068,7 +1068,7 @@ public class ClassInsertData {
                     + "AND SUBSTR(TRAN_ITEM,0,3) NOT IN ('FM','RM')\n"
                     + "AND SUBSTR(TRAN_ITEM,0,4) NOT IN ('" + jTextBreed + "5" + "')\n"
                     + "AND SUBSTR(TRAN_ITEM,0,6) NOT IN ('" + jTextBreed + "403" + "','" + jTextBreed + "404" + "')\n"
-//                    + "AND TRAN_TYPE != 'BE'\n"
+                    //                    + "AND TRAN_TYPE != 'BE'\n"
                     + "GROUP BY TRAN_HOUSE,TRAN_ITEM)\n"
                     + "WHERE TRAN_QTY > 0";
             sta.execute(Sql);
@@ -1214,6 +1214,42 @@ public class ClassInsertData {
                     + "'" + jTextItem + "', \n"
                     + "'" + jTextSumTotal + "', \n"
                     + "'" + jTextBreed + "')";
+            sta.execute(Sql);
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println(ex.toString());
+                }
+            }
+        }
+
+    }
+
+    public void UpdateDuck(String table, String type, String Car1, String Car2,
+            String MO, String Temp1, String Temp2, String RecDate,
+            String House, String Flock, String Breed, String FARM) {
+
+        Connection conn = null;
+        try {
+            conn = ConnectSQLite.ConnectionSQLite();
+            Statement sta = conn.createStatement();
+            String Sql = "UPDATE " + table + "\n"
+                    + "SET PSGR_FROM = '" + type + "',\n"
+                    + "PSGR_CAR1 = '" + Car1 + "',\n"
+                    + "PSGR_CAR2 = '" + Car2 + "',\n"
+                    + "PSGR_MO = '" + MO + "',\n"
+                    + "PSGR_TEMP1 = '" + Temp1 + "',\n"
+                    + "PSGR_TEMP2 = '" + Temp2 + "',\n"
+                    + "PSGR_FLOCK = '" + Flock + "'\n"
+                    + "WHERE PSGR_DATE = '" + RecDate + "'\n"
+                    + "AND PSGR_HOUSE = '" + House + "'\n"
+                    + "AND PSGR_BREED = '" + Breed + "'\n"
+                    + "AND PSGR_FARM = '" + FARM + "'";
             sta.execute(Sql);
 
         } catch (Exception ex) {

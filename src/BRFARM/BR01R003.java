@@ -27,6 +27,7 @@ public class BR01R003 extends javax.swing.JFrame {
     ClassInsertData cid = new ClassInsertData();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    DateTimeFormatter formatter3 = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     /**
      * Launch the application.
@@ -241,13 +242,13 @@ private void InsertDInvenBal() {
             JOptionPane.showMessageDialog(this, "เลือกวันที่เริ่มหลังจากวันจบกรุณาเลือกใหม่ครับ");
 
         } else {
-//            while (!currentDate.isAfter(targetDate)) {
-//                cid.DeleteDInvenBal(BRLogin.vFarm, currentDate.format(formatter2), BRLogin.vDuckBreed, BRLogin.vDuckBreedAll);
-//                cid.InsertMTranDInvenBal(BRLogin.vFarm, currentDate.format(formatter2), sdf2.format(jXDateStart.getDate()), BRLogin.vDuckBreed, BRLogin.vDuckBreedAll);
-//                currentDate = currentDate.plusDays(1);
-//            }
-           cid.DeleteDInvenBal(BRLogin.vFarm, sdf.format(jXDateStart.getDate()), BRLogin.vDuckBreed, BRLogin.vDuckBreedAll);
-        cid.InsertMTranDInvenBal(BRLogin.vFarm, sdf.format(jXDateStart.getDate()), sdf2.format(jXDateStart.getDate()), BRLogin.vDuckBreed, BRLogin.vDuckBreedAll);
+            while (!currentDate.isAfter(targetDate)) {
+                cid.DeleteDInvenBal(BRLogin.vFarm, currentDate.format(formatter2), BRLogin.vDuckBreed, BRLogin.vDuckBreedAll);
+                cid.InsertMTranDInvenBal(BRLogin.vFarm, currentDate.format(formatter2), currentDate.format(formatter3), BRLogin.vDuckBreed, BRLogin.vDuckBreedAll);
+                currentDate = currentDate.plusDays(1);
+            }
+//           cid.DeleteDInvenBal(BRLogin.vFarm, sdf.format(jXDateStart.getDate()), BRLogin.vDuckBreed, BRLogin.vDuckBreedAll);
+//        cid.InsertMTranDInvenBal(BRLogin.vFarm, sdf.format(jXDateStart.getDate()), sdf2.format(jXDateStart.getDate()), BRLogin.vDuckBreed, BRLogin.vDuckBreedAll);
         }
 
     }

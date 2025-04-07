@@ -19,7 +19,23 @@ public class BRMain extends javax.swing.JFrame {
     public BRMain() {
         initComponents();
         this.setTitle("BRFARM : " + BRLogin.vDuckBreed + " " + BRLogin.vDuckBreedDesc + " : " + BRLogin.vFarm + " " + BRLogin.vFarmDesc);
-        
+        if("CM".equals(BRLogin.vDuckBreed)){
+            //Remove Data Select Option
+            jMenuGrowerMT.setVisible(false);
+            jMenuGrower.setVisible(false);
+            jMenuLaying.setVisible(false);
+            jMenuLayingMT.setVisible(false);
+            //Remove select of of option for Report
+            jMenuItem1.setVisible(false);
+            jMenuItem5.setVisible(false);
+        }
+        else{
+            //Remove Data Select Option
+            jMenuItem20.setVisible(false);
+            //Remove select of of option for Report
+            jMenuItem21.setVisible(false);
+            jMenuItem22.setVisible(false);
+        }
         
     }
 

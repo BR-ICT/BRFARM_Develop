@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.5.1  -->
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BF01R004" language="groovy" pageWidth="900" pageHeight="595" orientation="Landscape" columnWidth="860" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffd84165-eee5-4a4c-889a-7fb0c0510697">
 	<property name="ireport.zoom" value="1.6934217901613384"/>
 	<property name="ireport.x" value="0"/>
@@ -82,6 +82,7 @@ AND TRAN_HOUSE = PSGR_HOUSE
 and PSGR_MO <> ''
 AND PSGR_FLOCK = FLOC_CODE
 AND FLOC_STATUS = '1'
+AND FLOC_BREED = TRAN_BREED
 AND SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}
 UNION ALL
 SELECT DISTINCT FLOC_FARM,SUBSTR(FLOC_CODE,0,4) AS FLOC_CODE,TRAN_HOUSE,SUBSTR(TRAN_HOUSE,4) AS SUBHOUSE,FLOC_STDATE AS REC_DATE,FLOC_STWEEK AS WK_DATE,
@@ -96,6 +97,7 @@ AND TRAN_HOUSE = PSGR_HOUSE
 and PSGR_MO <> ''
 AND PSGR_FLOCK = FLOC_CODE
 AND FLOC_STATUS = '1'
+AND FLOC_BREED = TRAN_BREED
 UNION ALL
 SELECT DISTINCT FLOC_FARM,SUBSTR(FLOC_CODE,0,4) AS FLOC_CODE,TRAN_HOUSE,SUBSTR(TRAN_HOUSE,4) AS SUBHOUSE,FLOC_STDATE AS REC_DATE,FLOC_STWEEK AS WK_DATE,
 CEIL(((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) - JULIANDAY(SUBSTR(FLOC_STWEEK,7)||"-"||SUBSTR(FLOC_STWEEK,4,2)||"-"||SUBSTR(FLOC_STWEEK,1,2))) / 7) +1) AS WEEK,
@@ -109,6 +111,7 @@ AND TRAN_HOUSE = PSGR_HOUSE
 and PSGR_MO <> ''
 AND PSGR_FLOCK = FLOC_CODE
 AND FLOC_STATUS = '1'
+AND FLOC_BREED = TRAN_BREED
 AND SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}
 UNION ALL
 SELECT DISTINCT FLOC_FARM,FLOC_CODE,TRAN_HOUSE,SUBSTR(TRAN_HOUSE,4) AS SUBHOUSE,FLOC_STDATE AS REC_DATE,FLOC_STWEEK AS WK_DATE,
@@ -123,6 +126,7 @@ AND TRAN_HOUSE = PSGR_HOUSE
 and PSGR_MO <> ''
 AND PSGR_FLOCK = FLOC_CODE
 AND FLOC_STATUS = '1'
+AND FLOC_BREED = TRAN_BREED
 AND SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}
 ORDER BY TRAN_HOUSE) AS a
 LEFT JOIN
@@ -135,6 +139,7 @@ AND INVE_BREED IN ($P{Breed},$P{BreedAll})
 AND INVE_ITEM = ITEM_CODE
 AND INVE_BREED = ITEM_BREED
 AND SUBSTR(INVE_DATE,7) || SUBSTR(INVE_DATE,4,2) || SUBSTR(INVE_DATE,1,2) = $P{EndDate}
+AND FAR_DINVENBAL.INVE_FARM = FAR_MITEM.ITEM_FARM 
 GROUP BY INVE_HOUSE) AS b
 ON a.TRAN_HOUSE = b.INVE_HOUSE
 LEFT JOIN
@@ -198,7 +203,7 @@ AND SUBSTR(INFO_DATE,7) || SUBSTR(INFO_DATE,4,2) || SUBSTR(INFO_DATE,1,2) BETWEE
 Group by TRAN_HOUSE,INFO_BREED) as be
 on a.TRAN_HOUSE = be.TRAN_HOUSE
 )
-WHERE GDD NOT NULL and (GDD != 0 or SM_HC != 0)]]>
+--WHERE (GDD NOT NULL OR SM_FEED != 0) and (GDD != 0 or SM_HC != 0 OR SM_FEED != 0)]]>
 	</queryString>
 	<field name="FLOC_FARM" class="java.lang.Object">
 		<property name="com.jaspersoft.studio.field.label" value="FLOC_FARM"/>
