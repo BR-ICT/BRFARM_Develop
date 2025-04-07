@@ -1205,6 +1205,190 @@ public class ClassListData {
         return null;
     }
 
+    public List<String> GetResultDuckRecieved(String farm, String type, String table) {
+
+        List<String> getListItemDuckRecieved = new ArrayList<String>();
+        Connection conn = null;
+        try {
+            conn = ConnectSQLite.ConnectionSQLite();
+            Statement sta = conn.createStatement();
+            String Sql = "SELECT PSGR_FLOCK,PSGR_HOUSE,PSGR_DATE,PSGR_MO,PSGR_DODF,\n"
+                    + "PSGR_DODM, PSGR_DEADAPF, PSGR_DEADAPM, PSGR_CULLAPF\n"
+                    + ", PSGR_CULLAPM, PSGR_DEADTF, PSGR_DEADTM, PSGR_CULLTF\n"
+                    + ", PSGR_CULLTM, PSGR_DEADVACF, PSGR_DEADVACM, PSGR_FEMALE\n"
+                    + ", PSGR_MALE\n"
+                    + "FROM " + table + "\n"
+                    + "WHERE PSGR_FARM = '" + farm + "'\n"
+                    + "AND PSGR_BREED = '" + type + "'";
+            ResultSet rs = sta.executeQuery(Sql);
+
+            while (rs.next()) {
+                getListItemDuckRecieved.add(
+                        //                        , PSGR_HOUSE, PSGR_DATE, PSGR_MO, PSGR_DODF, PSGR_DODM, PSGR_DEADAPF, PSGR_DEADAPM, PSGR_CULLAPF, PSGR_CULLAPM, PSGR_DEADTF, PSGR_DEADTM, PSGR_CULLTF, PSGR_CULLTM, PSGR_DEADVACF, PSGR_DEADVACM, PSGR_FEMALE,
+                        rs.getString("PSGR_FLOCK").trim() + " ; "
+                        + rs.getString("PSGR_HOUSE").trim() + " ; "
+                        + rs.getString("PSGR_DATE").trim() + " ; "
+                        + rs.getString("PSGR_MO").trim() + " ; "
+                        + rs.getString("PSGR_DODF").trim() + " ; "
+                        + rs.getString("PSGR_DODM").trim() + " ; "
+                        + rs.getString("PSGR_DEADAPF").trim() + " ; "
+                        + rs.getString("PSGR_DEADAPM").trim() + " ; "
+                        + rs.getString("PSGR_CULLAPF").trim() + " ; "
+                        + rs.getString("PSGR_CULLAPM").trim() + " ; "
+                        + rs.getString("PSGR_DEADTF").trim() + " ; "
+                        + rs.getString("PSGR_DEADTM").trim() + " ; "
+                        + rs.getString("PSGR_CULLTF").trim() + " ; "
+                        + rs.getString("PSGR_CULLTM").trim() + " ; "
+                        + rs.getString("PSGR_DEADVACF").trim() + " ; "
+                        + rs.getString("PSGR_DEADVACM").trim() + " ; "
+                        + rs.getString("PSGR_FEMALE").trim() + " ; "
+                        + rs.getString("PSGR_MALE").trim());
+            }
+            return getListItemDuckRecieved;
+
+        } catch (Exception ex) {
+            System.out.println(ex.toString());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println(ex.toString());
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<String> GetDuckData(String farm, String type, String table) {
+
+        List<String> getListItemDuckRecieved = new ArrayList<String>();
+        Connection conn = null;
+        try {
+            conn = ConnectSQLite.ConnectionSQLite();
+            Statement sta = conn.createStatement();
+            String Sql = "SELECT PSGR_FLOCK,PSGR_HOUSE,PSGR_DATE,PSGR_MO,PSGR_DODF,\n"
+                    + "PSGR_DODM, PSGR_DEADAPF, PSGR_DEADAPM, PSGR_CULLAPF\n"
+                    + ", PSGR_CULLAPM, PSGR_DEADTF, PSGR_DEADTM, PSGR_CULLTF\n"
+                    + ", PSGR_CULLTM, PSGR_DEADVACF, PSGR_DEADVACM, PSGR_FEMALE\n"
+                    + ", PSGR_MALE\n"
+                    + "FROM " + table + "\n"
+                    + "WHERE PSGR_FARM = '" + farm + "'\n"
+                    + "AND PSGR_BREED = '" + type + "'";
+            ResultSet rs = sta.executeQuery(Sql);
+
+            while (rs.next()) {
+                getListItemDuckRecieved.add(
+                        //                        , PSGR_HOUSE, PSGR_DATE, PSGR_MO, PSGR_DODF, PSGR_DODM, PSGR_DEADAPF, PSGR_DEADAPM, PSGR_CULLAPF, PSGR_CULLAPM, PSGR_DEADTF, PSGR_DEADTM, PSGR_CULLTF, PSGR_CULLTM, PSGR_DEADVACF, PSGR_DEADVACM, PSGR_FEMALE,
+                        rs.getString("PSGR_FLOCK").trim() + " ; "
+                        + rs.getString("PSGR_HOUSE").trim() + " ; "
+                        + rs.getString("PSGR_DATE").trim() + " ; "
+                        + rs.getString("PSGR_MO").trim() + " ; "
+                        + rs.getString("PSGR_DODF").trim() + " ; "
+                        + rs.getString("PSGR_DODM").trim() + " ; "
+                        + rs.getString("PSGR_DEADAPF").trim() + " ; "
+                        + rs.getString("PSGR_DEADAPM").trim() + " ; "
+                        + rs.getString("PSGR_CULLAPF").trim() + " ; "
+                        + rs.getString("PSGR_CULLAPM").trim() + " ; "
+                        + rs.getString("PSGR_DEADTF").trim() + " ; "
+                        + rs.getString("PSGR_DEADTM").trim() + " ; "
+                        + rs.getString("PSGR_CULLTF").trim() + " ; "
+                        + rs.getString("PSGR_CULLTM").trim() + " ; "
+                        + rs.getString("PSGR_DEADVACF").trim() + " ; "
+                        + rs.getString("PSGR_DEADVACM").trim() + " ; "
+                        + rs.getString("PSGR_FEMALE").trim() + " ; "
+                        + rs.getString("PSGR_MALE").trim());
+            }
+            return getListItemDuckRecieved;
+
+        } catch (Exception ex) {
+            System.out.println(ex.toString());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println(ex.toString());
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<String> GetDuckDataForChange(String Flock, String House, String DateReceived, String MO, String Table, String farm) {
+
+        List<String> GetDuckDataForChange = new ArrayList<String>();
+        Connection conn = null;
+        try {
+            conn = ConnectSQLite.ConnectionSQLite();
+            Statement sta = conn.createStatement();
+            String Sql = "SELECT " + Table + ".*\n"
+                    + ",COALESCE(PSGR_HOUSE||' : '||HOUS_NAME,'') as HOUSCODE\n"
+                    + ",COALESCE(FLOC_CODE ||' : '||FLOC_DESC,'') AS FLOCKCODE\n"
+                    + "FROM " + Table + "\n"
+                    + "LEFT JOIN FAR_MHOUSE \n"
+                    + "ON PSGR_HOUSE = HOUS_CODE\n"
+                    + "AND PSGR_FARM = HOUS_FARM\n"
+                    + "LEFT JOIN FAR_FLOCK\n"
+                    + "ON FLOC_FARM = PSGR_FARM\n"
+                    + "AND FLOC_CODE  = PSGR_FLOCK\n"
+                    + "WHERE PSGR_FARM = '" + farm + "'\n"
+                    + "AND PSGR_DATE = '" + DateReceived + "'\n"
+                    + "AND PSGR_HOUSE = '" + House + "'\n"
+                    + "AND PSGR_FLOCK = '" + Flock + "'\n"
+                    + "AND PSGR_MO = '" + MO + "'";
+            ResultSet rs = sta.executeQuery(Sql);
+
+            while (rs.next()) {
+                GetDuckDataForChange.add(
+                        //                        , PSGR_HOUSE, PSGR_DATE, PSGR_MO, PSGR_DODF, PSGR_DODM, PSGR_DEADAPF, PSGR_DEADAPM, PSGR_CULLAPF, PSGR_CULLAPM, PSGR_DEADTF, PSGR_DEADTM, PSGR_CULLTF, PSGR_CULLTM, PSGR_DEADVACF, PSGR_DEADVACM, PSGR_FEMALE,
+                        rs.getString("PSGR_FARM").trim() + " ; "
+                        + rs.getString("PSGR_DATE").trim() + " ; "
+                        + rs.getString("HOUSCODE").trim() + " ; "
+                        + rs.getString("FLOCKCODE") + " ; "
+                        + rs.getString("PSGR_FROM").trim() + " ; "
+                        + rs.getString("PSGR_FLIGHT").trim() + " ; "
+                        + rs.getString("PSGR_CAR1").trim() + " ; "
+                        + rs.getString("PSGR_CAR2").trim() + " ; "
+                        + rs.getString("PSGR_ST1").trim() + " ; "
+                        + rs.getString("PSGR_ST2").trim() + " ; "
+                        + rs.getString("PSGR_ARF1").trim() + " ; "
+                        + rs.getString("PSGR_ARF2").trim() + " ; "
+                        + rs.getString("PSGR_TEMP1").trim() + " ; "
+                        + rs.getString("PSGR_TEMP2").trim() + " ; "
+                        + rs.getString("PSGR_DODF").trim() + " ; "
+                        + rs.getString("PSGR_DODM").trim() + " ; "
+                        + rs.getString("PSGR_DEADAPF").trim() + " ; "
+                        + rs.getString("PSGR_DEADAPM").trim() + " ; "
+                        + rs.getString("PSGR_CULLAPF").trim() + " ; "
+                        + rs.getString("PSGR_CULLAPM").trim() + " ; "
+                        + rs.getString("PSGR_DEADTF").trim() + " ; "
+                        + rs.getString("PSGR_DEADTM").trim() + " ; "
+                        + rs.getString("PSGR_CULLTF").trim() + " ; "
+                        + rs.getString("PSGR_CULLTM").trim() + " ; "
+                        + rs.getString("PSGR_DEADVACF").trim() + " ; "
+                        + rs.getString("PSGR_DEADVACM").trim() + " ; "
+                        + rs.getString("PSGR_FEMALE").trim() + " ; "
+                        + rs.getString("PSGR_MALE").trim() + " ; "
+                        + rs.getString("PSGR_MO").trim() + " ; "
+                        + rs.getString("PSGR_BREED").trim());
+            }
+            return GetDuckDataForChange;
+
+        } catch (Exception ex) {
+            System.out.println(ex.toString());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println(ex.toString());
+                }
+            }
+        }
+        return null;
+    }
+
     public List<String> GetResultInforDetail(String farm) {
 
         List<String> getListInforDetail = new ArrayList<String>();

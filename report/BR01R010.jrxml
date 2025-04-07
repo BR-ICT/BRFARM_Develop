@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BF01R010" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b0d4fdc1-84dd-474d-9121-c171b2697a57">
 	<property name="ireport.zoom" value="2.143588810000066"/>
 	<property name="ireport.x" value="0"/>
@@ -155,7 +156,7 @@ AND DESC_DATE = $P{StartDate}]]>
 				<textFieldExpression><![CDATA[""+$F{DESC_DATE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="184" y="73" width="100" height="14" uuid="dfdc7cd9-eeee-4cdb-bf82-379d6c458129"/>
+				<reportElement x="184" y="73" width="296" height="14" uuid="dfdc7cd9-eeee-4cdb-bf82-379d6c458129"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="12"/>
 				</textElement>

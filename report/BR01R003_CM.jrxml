@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 5.5.2  -->
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BF01R003" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffd84165-eee5-4a4c-889a-7fb0c0510697">
 	<property name="ireport.zoom" value="1.7715610000000577"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SQLite"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DB2_Fixed"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="195"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="800"/>
@@ -59,7 +59,7 @@ SM_HCS,ROUND(COALESCE((SM_HCS * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2)
 SM_HCD,ROUND(COALESCE((SM_HCD * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCD,
 SM_HCC,ROUND(COALESCE((SM_HCC * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCC,
 COALESCE(SM_HC01,0) AS H01,COALESCE(SM_HC02,0) AS H02,
-F_5,F_11,F_7,F_8,F_9,F_10,F_48,F_14,F_50,F_6,F_15,F_52,F_13,F_122,F_124,F_350,F_353,F_359,F_360,COALESCE(EN_PSF,0) AS EN_PSF,COALESCE(EN_PSM,0) AS EN_PSM
+F_5,F_11,F_7,F_8,F_9,F_10,F_48,F_14,F_50,F_6,F_15,F_52,F_13,F_122,F_124,F_350,F_353,F_359,F_360,F_361,COALESCE(EN_PSF,0) AS EN_PSF,COALESCE(EN_PSM,0) AS EN_PSM
 FROM
 (SELECT DISTINCT TRAN_DATE
 FROM FAR_MTRANSECTION
@@ -103,6 +103,7 @@ SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303050' THEN TRAN_QTY * -1 EL
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303053' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_353,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303059' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_359,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303060' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_360,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303061' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_361,
 ROUND((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) +1) - JULIANDAY(SUBSTR($P{StartDate},0,5)||"-"||SUBSTR($P{StartDate},5,2)||"-"||SUBSTR($P{StartDate},7,2))) AS SUM_DAY
 FROM FAR_MTRANSECTION,FAR_MITEM
 WHERE TRAN_FARM = $P{Farm}
@@ -158,7 +159,8 @@ AND PSGR_HOUSE = $P{House}
 AND FLOC_STATUS = '1'
 AND FLOC_FARM = PSGR_FARM
 AND FLOC_BREED = PSGR_BREED
-AND FLOC_CODE = PSGR_FLOCK)
+AND FLOC_CODE = PSGR_FLOCK
+GROUP BY PSGR_HOUSE,PSGR_FLOCK)
 ON HOUS_CODE = PSGR_HOUSE
 AND M_LASTMO = PSGR_MO) AS f
 LEFT JOIN
@@ -188,7 +190,7 @@ SM_HCS,ROUND(COALESCE((SM_HCS * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2)
 SM_HCD,ROUND(COALESCE((SM_HCD * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCD,
 SM_HCC,ROUND(COALESCE((SM_HCC * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCC,
 COALESCE(SM_HC01,0) AS H01,COALESCE(SM_HC02,0) AS H02,
-F_5,F_11,F_7,F_8,F_9,F_10,F_48,F_14,F_50,F_6,F_15,F_52,F_13,F_122,F_124,F_350,F_353,F_359,F_360,COALESCE(EN_PSF,0) AS EN_PSF,COALESCE(EN_PSM,0) AS EN_PSM
+F_5,F_11,F_7,F_8,F_9,F_10,F_48,F_14,F_50,F_6,F_15,F_52,F_13,F_122,F_124,F_350,F_353,F_359,F_360,F_361,COALESCE(EN_PSF,0) AS EN_PSF,COALESCE(EN_PSM,0) AS EN_PSM
 FROM
 (SELECT DISTINCT TRAN_DATE
 FROM FAR_MTRANSECTION
@@ -232,6 +234,7 @@ SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303050' THEN TRAN_QTY * -1 EL
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303053' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_353,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303059' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_359,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303060' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_360,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303061' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_361,
 ROUND((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) +1) - JULIANDAY(SUBSTR($P{StartDate},0,5)||"-"||SUBSTR($P{StartDate},5,2)||"-"||SUBSTR($P{StartDate},7,2))) AS SUM_DAY
 FROM FAR_MTRANSECTION,FAR_MITEM
 WHERE TRAN_FARM = $P{Farm}
@@ -286,7 +289,8 @@ AND PSGR_HOUSE = $P{House}
 AND FLOC_STATUS = '1'
 AND FLOC_FARM = PSGR_FARM
 AND FLOC_BREED = PSGR_BREED
-AND FLOC_CODE = PSGR_FLOCK)
+AND FLOC_CODE = PSGR_FLOCK
+GROUP BY PSGR_HOUSE,PSGR_FLOCK)
 ON HOUS_CODE = PSGR_HOUSE
 AND M_LASTMO = PSGR_MO) AS f
 LEFT JOIN
@@ -316,7 +320,7 @@ SM_HCS,ROUND(COALESCE((SM_HCS * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2)
 SM_HCD,ROUND(COALESCE((SM_HCD * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCD,
 SM_HCC,ROUND(COALESCE((SM_HCC * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCC,
 COALESCE(SM_HC01,0) AS H01,COALESCE(SM_HC02,0) AS H02,
-F_5,F_11,F_7,F_8,F_9,F_10,F_48,F_14,F_50,F_6,F_15,F_52,F_13,F_122,F_124,F_350,F_353,F_359,F_360,COALESCE(EN_PSF,0) AS EN_PSF,COALESCE(EN_PSM,0) AS EN_PSM
+F_5,F_11,F_7,F_8,F_9,F_10,F_48,F_14,F_50,F_6,F_15,F_52,F_13,F_122,F_124,F_350,F_353,F_359,F_360,F_361,COALESCE(EN_PSF,0) AS EN_PSF,COALESCE(EN_PSM,0) AS EN_PSM
 FROM
 (SELECT DISTINCT TRAN_DATE
 FROM FAR_MTRANSECTION
@@ -360,6 +364,7 @@ SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303050' THEN TRAN_QTY * -1 EL
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303053' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_353,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303059' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_359,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303060' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_360,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303061' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_361,
 ROUND((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) +1) - JULIANDAY(SUBSTR($P{StartDate},0,5)||"-"||SUBSTR($P{StartDate},5,2)||"-"||SUBSTR($P{StartDate},7,2))) AS SUM_DAY
 FROM FAR_MTRANSECTION,FAR_MITEM
 WHERE TRAN_FARM = $P{Farm}
@@ -414,7 +419,8 @@ AND PSGR_HOUSE = $P{House}
 AND FLOC_STATUS = '1'
 AND FLOC_FARM = PSGR_FARM
 AND FLOC_BREED = PSGR_BREED
-AND FLOC_CODE = PSGR_FLOCK)
+AND FLOC_CODE = PSGR_FLOCK
+GROUP BY PSGR_HOUSE,PSGR_FLOCK)
 ON HOUS_CODE = PSGR_HOUSE
 AND M_LASTMO = PSGR_MO) AS f
 LEFT JOIN
@@ -444,7 +450,7 @@ SM_HCS,ROUND(COALESCE((SM_HCS * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2)
 SM_HCD,ROUND(COALESCE((SM_HCD * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCD,
 SM_HCC,ROUND(COALESCE((SM_HCC * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCC,
 COALESCE(SM_HC01,0) AS H01,COALESCE(SM_HC02,0) AS H02,
-F_5,F_11,F_7,F_8,F_9,F_10,F_48,F_14,F_50,F_6,F_15,F_52,F_13,F_122,F_124,F_350,F_353,F_359,F_360,COALESCE(EN_PSF,0) AS EN_PSF,COALESCE(EN_PSM,0) AS EN_PSM
+F_5,F_11,F_7,F_8,F_9,F_10,F_48,F_14,F_50,F_6,F_15,F_52,F_13,F_122,F_124,F_350,F_353,F_359,F_360,F_361,COALESCE(EN_PSF,0) AS EN_PSF,COALESCE(EN_PSM,0) AS EN_PSM
 FROM
 (SELECT DISTINCT TRAN_DATE
 FROM FAR_MTRANSECTION
@@ -488,6 +494,7 @@ SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303050' THEN TRAN_QTY * -1 EL
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303053' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_353,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303059' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_359,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303060' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_360,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'RM303061' THEN TRAN_QTY * -1 ELSE 0 END ) AS F_361,
 ROUND((JULIANDAY(SUBSTR($P{EndDate},0,5)||"-"||SUBSTR($P{EndDate},5,2)||"-"||SUBSTR($P{EndDate},7,2)) +1) - JULIANDAY(SUBSTR($P{StartDate},0,5)||"-"||SUBSTR($P{StartDate},5,2)||"-"||SUBSTR($P{StartDate},7,2))) AS SUM_DAY
 FROM FAR_MTRANSECTION,FAR_MITEM
 WHERE TRAN_FARM = $P{Farm}
@@ -542,7 +549,8 @@ AND PSGR_HOUSE = $P{House}
 AND FLOC_STATUS = '1'
 AND FLOC_FARM = PSGR_FARM
 AND FLOC_BREED = PSGR_BREED
-AND FLOC_CODE = PSGR_FLOCK)
+AND FLOC_CODE = PSGR_FLOCK
+GROUP BY PSGR_HOUSE,PSGR_FLOCK)
 ON HOUS_CODE = PSGR_HOUSE
 AND M_LASTMO = PSGR_MO) AS f
 LEFT JOIN
@@ -797,6 +805,10 @@ AND AGE >= 0]]>
 		<property name="com.jaspersoft.studio.field.name" value="F_360"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_360"/>
 	</field>
+	<field name="F_361" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="F_361"/>
+		<property name="com.jaspersoft.studio.field.label" value="F_361"/>
+	</field>
 	<field name="EN_PSF" class="java.lang.Object">
 		<property name="com.jaspersoft.studio.field.name" value="EN_PSF"/>
 		<property name="com.jaspersoft.studio.field.label" value="EN_PSF"/>
@@ -951,6 +963,9 @@ AND AGE >= 0]]>
 	</variable>
 	<variable name="TOTAL_SUM_303060" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{F_360}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_303061" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{F_361}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -1278,7 +1293,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[#204]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="732" y="48" width="35" height="21" backcolor="#FFCCCC" uuid="128249ed-1e3b-4234-9b54-4f07b8f3c0a7"/>
+				<reportElement mode="Opaque" x="713" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="128249ed-1e3b-4234-9b54-4f07b8f3c0a7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1288,7 +1305,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Gms.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="668" y="48" width="34" height="21" backcolor="#FFCCCC" uuid="28d95773-5364-473d-9345-7db47155084a"/>
+				<reportElement mode="Opaque" x="653" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="28d95773-5364-473d-9345-7db47155084a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1298,7 +1317,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="702" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="00f3a8c0-48a3-44a8-936d-ab92a8e02f62"/>
+				<reportElement mode="Opaque" x="683" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="00f3a8c0-48a3-44a8-936d-ab92a8e02f62">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1308,7 +1329,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="572" y="48" width="33" height="21" backcolor="#FFCCCC" uuid="673e4a96-4e4f-4d08-a407-6bb6151183d4"/>
+				<reportElement mode="Opaque" x="563" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="673e4a96-4e4f-4d08-a407-6bb6151183d4">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1318,7 +1341,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="605" y="48" width="33" height="21" backcolor="#FFCCCC" uuid="c0289208-8eb4-4f37-b671-f8057d2b86ad"/>
+				<reportElement mode="Opaque" x="593" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="c0289208-8eb4-4f37-b671-f8057d2b86ad">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1328,7 +1353,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="767" y="48" width="34" height="21" backcolor="#FFCCCC" uuid="485dff18-3c31-4060-b19e-0923af5f449f"/>
+				<reportElement mode="Opaque" x="743" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="485dff18-3c31-4060-b19e-0923af5f449f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1338,7 +1365,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="638" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="2cd1597a-5841-4eaf-9acf-f394c592ef37"/>
+				<reportElement mode="Opaque" x="623" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="2cd1597a-5841-4eaf-9acf-f394c592ef37">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1348,7 +1377,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="539" y="48" width="33" height="21" backcolor="#FFCCCC" uuid="b660ae52-58da-4f6b-828b-8ac95c18d11f"/>
+				<reportElement mode="Opaque" x="533" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="b660ae52-58da-4f6b-828b-8ac95c18d11f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1358,7 +1389,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Pcs.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="503" y="48" width="36" height="21" backcolor="#FFCCCC" uuid="2d086c8e-86e9-4c2a-8151-68788d36e318"/>
+				<reportElement mode="Opaque" x="503" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="2d086c8e-86e9-4c2a-8151-68788d36e318">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1378,7 +1411,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Vaccine & Medicine (RM)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="503" y="27" width="36" height="21" backcolor="#FFCCCC" uuid="9ee7d71f-6083-476b-839c-4c40d7dffb24"/>
+				<reportElement mode="Opaque" x="503" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="9ee7d71f-6083-476b-839c-4c40d7dffb24">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1388,7 +1423,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Hidrorex]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="503" y="18" width="36" height="9" backcolor="#FFCCCC" uuid="ae5b6574-a6f6-497e-bb03-435804a74bd8"/>
+				<reportElement mode="Opaque" x="503" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="ae5b6574-a6f6-497e-bb03-435804a74bd8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1398,7 +1435,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[301022]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="539" y="18" width="33" height="9" backcolor="#FFCCCC" uuid="533c9754-4803-42cc-91a0-69d00dad0dc5"/>
+				<reportElement mode="Opaque" x="533" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="533c9754-4803-42cc-91a0-69d00dad0dc5">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1408,7 +1447,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[301024]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="539" y="27" width="33" height="21" backcolor="#FFCCCC" uuid="fa19625b-275e-4971-b38d-12544549954d"/>
+				<reportElement mode="Opaque" x="533" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="fa19625b-275e-4971-b38d-12544549954d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1418,7 +1459,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[ENOVIT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="572" y="27" width="33" height="21" backcolor="#FFCCCC" uuid="4234d339-9ebd-4705-b572-d7d333d9f7ef"/>
+				<reportElement mode="Opaque" x="563" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="4234d339-9ebd-4705-b572-d7d333d9f7ef">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1428,7 +1471,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[DP 500]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="572" y="18" width="33" height="9" backcolor="#FFCCCC" uuid="dd37e642-461d-4d9d-8984-4c1ca311e412"/>
+				<reportElement mode="Opaque" x="563" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="dd37e642-461d-4d9d-8984-4c1ca311e412">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1438,7 +1483,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[302002]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="605" y="27" width="33" height="21" backcolor="#FFCCCC" uuid="8f486186-9a2f-465a-9a24-194db2f5dd0b"/>
+				<reportElement mode="Opaque" x="593" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="8f486186-9a2f-465a-9a24-194db2f5dd0b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1448,7 +1495,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[DP 1000]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="605" y="18" width="33" height="9" backcolor="#FFCCCC" uuid="069d615b-6057-4608-a96e-a1241d1b49cd"/>
+				<reportElement mode="Opaque" x="593" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="069d615b-6057-4608-a96e-a1241d1b49cd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1458,7 +1507,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[302003]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="638" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="5387d1d3-1fd0-4eeb-bd1d-98d3e80982c6"/>
+				<reportElement mode="Opaque" x="623" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="5387d1d3-1fd0-4eeb-bd1d-98d3e80982c6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1468,7 +1519,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Kap. 500]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="638" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="0aa9ad85-6de7-41db-9778-6e07e2b16cc6"/>
+				<reportElement mode="Opaque" x="623" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="0aa9ad85-6de7-41db-9778-6e07e2b16cc6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1478,7 +1531,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[302016]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="668" y="27" width="34" height="21" backcolor="#FFCCCC" uuid="d367ca47-9d06-4fc9-b882-945c73e429a9"/>
+				<reportElement mode="Opaque" x="653" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="d367ca47-9d06-4fc9-b882-945c73e429a9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1488,7 +1543,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Vetrimoxin]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="668" y="18" width="34" height="9" backcolor="#FFCCCC" uuid="f80f9463-0709-4e36-a5bc-06c9f87f73da"/>
+				<reportElement mode="Opaque" x="653" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="f80f9463-0709-4e36-a5bc-06c9f87f73da">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1498,7 +1555,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[303050]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="702" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="6dad675c-e379-4975-a2d5-091c572a6e17"/>
+				<reportElement mode="Opaque" x="683" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="6dad675c-e379-4975-a2d5-091c572a6e17">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1508,7 +1567,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Topacin]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="702" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="7d3c1258-933e-4648-9c5b-6235b36fa271"/>
+				<reportElement mode="Opaque" x="683" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="7d3c1258-933e-4648-9c5b-6235b36fa271">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1518,7 +1579,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[303053]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="732" y="27" width="35" height="21" backcolor="#FFCCCC" uuid="820e3adf-d0bf-4cbe-9518-ae759f6aa02f"/>
+				<reportElement mode="Opaque" x="713" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="820e3adf-d0bf-4cbe-9518-ae759f6aa02f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1528,7 +1591,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[VETXILL 50%]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="732" y="18" width="35" height="9" backcolor="#FFCCCC" uuid="4462254b-c5ec-424d-acfe-7c094cc3d967"/>
+				<reportElement mode="Opaque" x="713" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="4462254b-c5ec-424d-acfe-7c094cc3d967">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1538,7 +1603,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[303059]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="767" y="27" width="34" height="21" backcolor="#FFCCCC" uuid="5a04708c-ef6a-436b-8dbc-100d3d91b7f9"/>
+				<reportElement mode="Opaque" x="743" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="5a04708c-ef6a-436b-8dbc-100d3d91b7f9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1548,7 +1615,9 @@ AND AGE >= 0]]>
 				<text><![CDATA[Moxyguard]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="767" y="18" width="34" height="9" backcolor="#FFCCCC" uuid="e2d35498-6063-4963-bc26-cd9c2b35bdff"/>
+				<reportElement mode="Opaque" x="743" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="e2d35498-6063-4963-bc26-cd9c2b35bdff">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1616,6 +1685,42 @@ AND AGE >= 0]]>
 					<font fontName="TH SarabunPSK" isBold="true"/>
 				</textElement>
 				<text><![CDATA[#207]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="773" y="18" width="28" height="9" backcolor="#FFCCCC" uuid="46422e25-1a4c-47ca-acc5-c6a555cc5a88">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Justified">
+					<font fontName="TH SarabunPSK" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[303060]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="773" y="27" width="28" height="21" backcolor="#FFCCCC" uuid="46982a3e-12c4-4d8b-93d1-5c8604e45baf">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AMOXY-S 500]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="773" y="48" width="28" height="21" backcolor="#FFCCCC" uuid="8ee2a9f7-7312-441d-9ebb-fe7c5d0f8c84">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KGS]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -1792,7 +1897,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{PC_HC} == 0? null : $F{PC_HC}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="503" y="0" width="36" height="17" uuid="e93cf291-b8c2-4518-a47e-04da47f21ecd"/>
+				<reportElement x="503" y="0" width="30" height="17" uuid="e93cf291-b8c2-4518-a47e-04da47f21ecd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1802,7 +1909,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_122}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="539" y="0" width="33" height="17" uuid="07345f7a-3000-4909-bade-e5f210cf429a"/>
+				<reportElement x="533" y="0" width="30" height="17" uuid="07345f7a-3000-4909-bade-e5f210cf429a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1812,7 +1921,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_124} == 0? null : $F{F_124}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="572" y="0" width="33" height="17" uuid="a29396dd-36d4-42f5-90a2-d6326062af38"/>
+				<reportElement x="563" y="0" width="30" height="17" uuid="a29396dd-36d4-42f5-90a2-d6326062af38">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1822,7 +1933,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_7} == 0? null : $F{F_7}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="605" y="0" width="33" height="17" uuid="95fe2e21-b38e-4c51-b300-d40febd46aa7"/>
+				<reportElement x="593" y="0" width="30" height="17" uuid="95fe2e21-b38e-4c51-b300-d40febd46aa7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1832,7 +1945,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_8} == 0? null : $F{F_8}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="638" y="0" width="30" height="17" uuid="9cbb8a11-a059-4be2-a20e-d3b9c981bb6d"/>
+				<reportElement x="623" y="0" width="30" height="17" uuid="9cbb8a11-a059-4be2-a20e-d3b9c981bb6d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1842,7 +1957,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_48} == 0? null : $F{F_48}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="668" y="0" width="34" height="17" uuid="1d05c94c-3f2b-40a5-8bff-0eb5495a1f41"/>
+				<reportElement x="653" y="0" width="30" height="17" uuid="1d05c94c-3f2b-40a5-8bff-0eb5495a1f41">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1852,7 +1969,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_350} == 0? null :  $F{F_350}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="702" y="0" width="30" height="17" uuid="e157898d-9d25-475a-ac35-a8a6192c68bf"/>
+				<reportElement x="683" y="0" width="30" height="17" uuid="e157898d-9d25-475a-ac35-a8a6192c68bf">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1862,7 +1981,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_353} == 0? null : $F{F_353}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="732" y="0" width="35" height="17" uuid="2a2e0f71-480a-47da-bc7e-769a0fc34f9e"/>
+				<reportElement x="713" y="0" width="30" height="17" uuid="2a2e0f71-480a-47da-bc7e-769a0fc34f9e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1872,7 +1993,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_359} == 0? null : $F{F_359}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="767" y="0" width="34" height="17" uuid="4b2f1acd-91de-466c-9d31-881e03431813"/>
+				<reportElement x="743" y="0" width="30" height="17" uuid="4b2f1acd-91de-466c-9d31-881e03431813">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1940,6 +2063,18 @@ AND AGE >= 0]]>
 					<font fontName="TH SarabunPSK" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SM_FM330} == 0? null : $F{SM_FM330}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="773" y="0" width="28" height="17" uuid="b872e2c6-4fa3-4bed-8bbe-cdc196aea630">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{F_361} == 0? null : $F{F_361}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -2176,7 +2311,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_AVG_GDD}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="503" y="0" width="36" height="14" backcolor="#FFCCCC" uuid="ed892896-4462-4408-9575-db662b552355"/>
+				<reportElement mode="Opaque" x="503" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="ed892896-4462-4408-9575-db662b552355">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2186,7 +2323,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_301022}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="539" y="0" width="33" height="14" backcolor="#FFCCCC" uuid="2b874ffa-1be6-4734-8504-8ee755b30758"/>
+				<reportElement mode="Opaque" x="533" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="2b874ffa-1be6-4734-8504-8ee755b30758">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2196,7 +2335,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302024}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="572" y="0" width="33" height="14" backcolor="#FFCCCC" uuid="1c3e989c-aaf8-4bec-998b-1596c4bca7bd"/>
+				<reportElement mode="Opaque" x="563" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="1c3e989c-aaf8-4bec-998b-1596c4bca7bd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2206,7 +2347,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302002}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="605" y="0" width="33" height="14" backcolor="#FFCCCC" uuid="5f0c7b6c-aaa4-4552-a531-4af89d368a86"/>
+				<reportElement mode="Opaque" x="593" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="5f0c7b6c-aaa4-4552-a531-4af89d368a86">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2216,7 +2359,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302003}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="638" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="8cbc8b7e-ee78-4c3a-b077-62dbe5262921"/>
+				<reportElement mode="Opaque" x="623" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="8cbc8b7e-ee78-4c3a-b077-62dbe5262921">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2226,7 +2371,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302016}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="668" y="0" width="34" height="14" backcolor="#FFCCCC" uuid="ce363bd9-3df6-4b7e-a09b-923622c9faca"/>
+				<reportElement mode="Opaque" x="653" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="ce363bd9-3df6-4b7e-a09b-923622c9faca">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2236,7 +2383,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302050}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="702" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="6f9f71a3-6744-43a6-96d1-161fb055898f"/>
+				<reportElement mode="Opaque" x="683" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="6f9f71a3-6744-43a6-96d1-161fb055898f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2246,7 +2395,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302053}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="732" y="0" width="35" height="14" backcolor="#FFCCCC" uuid="96d18afc-46ba-472e-a0ce-bc90b0f97db1"/>
+				<reportElement mode="Opaque" x="713" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="96d18afc-46ba-472e-a0ce-bc90b0f97db1">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2256,7 +2407,9 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302059}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="767" y="0" width="34" height="14" backcolor="#FFCCCC" uuid="056c3d0b-9ad9-4d23-9b74-c77480b68cc0"/>
+				<reportElement mode="Opaque" x="743" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="056c3d0b-9ad9-4d23-9b74-c77480b68cc0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2324,6 +2477,18 @@ AND AGE >= 0]]>
 					<font fontName="TH SarabunPSK" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM330}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="773" y="0" width="28" height="14" backcolor="#FFCCCC" uuid="73a12e5a-22e0-4e12-b438-c8ee2d3e00fd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_SUM_303061}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

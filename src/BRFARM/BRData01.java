@@ -4,6 +4,7 @@
  */
 package BRFARM;
 
+import static BRFARM.BRLogin.vDuckBreed;
 import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,17 +28,18 @@ public class BRData01 extends javax.swing.JFrame {
     public static String vINFO_DATE, vINFO_FARM, vINFO_HOUSE, vINFO_ITEM, vINFO_DESC, vINFO_DISE, vINFO_QTY, vINFO_REFER;
     public static String vTYPE_CODE, vTYPE_NAME, vTYPE_PROPERTY;
     public static String vITUN_CODE, vITUN_NAME, vITUN_PROPERTY;
+    public static String vDUCK_FLOCK, vDUCK_HOUSE, vDUCK_DATEREC, vDUCK_MO, vDUCK_FARM, vDUCK_Type;
     public static String vITGR_CODE, vITGR_NAME, vITGR_PROPERTY;
     public static String vCERT_CODE, vCERT_NAME;
     public static String OnCreate, OnChange;
     public static String FrameOpen = "Yes";
     public static String JPanel = "Farm";
     DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel();
-    DefaultTableModel mFarm, mHouse, mPene, mFlock, mItem, mInfor, mType, mUnit, mGroup, mCert;
+    DefaultTableModel mFarm, mHouse, mPene, mFlock, mItem, mInfor, mType, mUnit, mGroup, mCert, mDuck;
     ClassReturnData crd = new ClassReturnData();
     ClassInsertData cid = new ClassInsertData();
     ClassListData cld = new ClassListData();
-     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
     SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd", Locale.US);
 
     /**
@@ -55,15 +57,24 @@ public class BRData01 extends javax.swing.JFrame {
         mType = (DefaultTableModel) jTableType.getModel();
         mUnit = (DefaultTableModel) jTableUnit.getModel();
         mGroup = (DefaultTableModel) jTableGroup.getModel();
+        mDuck = (DefaultTableModel) jTableDuck.getModel();
         mCert = (DefaultTableModel) jTableCert.getModel();
         jXDateStart.setFormats(sdf);
         jXDateEnd.setFormats(sdf);
         jXDateStart.setDate(new Date());
         jXDateEnd.setDate(new Date());
         jMenuSave.setEnabled(false);
-        jcbItem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Farm" }));
+        jcbItem.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Select Farm"}));
         jcbItem.setModel(new DefaultComboBoxModel(cld.GetResultPene(BRLogin.vFarm).toArray()));
         jcbHouse.setModel(new DefaultComboBoxModel(cld.GetResultHouseDesc(BRLogin.vFarm, BRLogin.vDuckBreed, BRLogin.vDuckBreedAll).toArray()));
+        if ("CM".equals(BRLogin.vDuckBreed)) {
+            jComboBox1.removeItem("Grower List");
+            jComboBox1.removeItem("Layer List");
+            jComboBox1.removeItem("Moulting Grower List");
+            jComboBox1.removeItem("Mouting Layer List");
+        } else {
+            jComboBox1.removeItem("Meat Duck List");
+        }
     }
 
     /**
@@ -112,6 +123,11 @@ public class BRData01 extends javax.swing.JFrame {
         jpGroup = new javax.swing.JPanel();
         jScrollPane10 = new javax.swing.JScrollPane();
         jTableGroup = new javax.swing.JTable();
+        jpDuckList = new javax.swing.JPanel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jScrollPane12 = new javax.swing.JScrollPane();
+        jTableDuck = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
         jpCert = new javax.swing.JPanel();
         jScrollPane11 = new javax.swing.JScrollPane();
         jTableCert = new javax.swing.JTable();
@@ -137,6 +153,11 @@ public class BRData01 extends javax.swing.JFrame {
         });
 
         jTabbedPane.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jTabbedPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                jTabbedPaneComponentShown(evt);
+            }
+        });
 
         jpFarm.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
@@ -616,6 +637,85 @@ public class BRData01 extends javax.swing.JFrame {
 
         jTabbedPane.addTab("Item Group", jpGroup);
 
+        jpDuckList.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                jpDuckListComponentHidden(evt);
+            }
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                jpDuckListComponentShown(evt);
+            }
+        });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Grower List", "Layer List", "Moulting Grower List", "Mouting Layer List", "Meat Duck List" }));
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
+        jTableDuck.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Flock", "House", "Date Recieved", "MO", "ขามาทั้งหมด-F", "ขามาทั้งหมด-M", "ตายจากต้นทาง-F", "ตายจากต้นทาง-M", "พิการจากต้นทาง-F", "พิการจากต้นทาง-M", "ตายระหว่างขนส่ง-F", "ตายระหว่างขนส่ง-M", "พิการระหว่างขนส่ง-F", "พิการระหว่างขนส่ง-M", "ตายระหว่างวัคซีน-F", "ตายระหว่างวัคซีน-M", "คงเหลือ-F", "คงเหลือ-M"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableDuck.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableDuckMouseClicked(evt);
+            }
+        });
+        jScrollPane12.setViewportView(jTableDuck);
+
+        jLabel1.setText("Type of Duck:");
+
+        javax.swing.GroupLayout jpDuckListLayout = new javax.swing.GroupLayout(jpDuckList);
+        jpDuckList.setLayout(jpDuckListLayout);
+        jpDuckListLayout.setHorizontalGroup(
+            jpDuckListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpDuckListLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(873, Short.MAX_VALUE))
+            .addGroup(jpDuckListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpDuckListLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 1207, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        jpDuckListLayout.setVerticalGroup(
+            jpDuckListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpDuckListLayout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addGroup(jpDuckListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 401, Short.MAX_VALUE))
+            .addGroup(jpDuckListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpDuckListLayout.createSequentialGroup()
+                    .addGap(37, 37, 37)
+                    .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+
+        jTabbedPane.addTab("Duck Setting List", jpDuckList);
+
         jpCert.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 jpCertComponentShown(evt);
@@ -785,6 +885,12 @@ public class BRData01 extends javax.swing.JFrame {
                     mGroup.removeRow(i);
                 }
             }
+        } else if ("DuckRec".equals(JPanel)) {
+            while (mDuck.getRowCount() > 0) {
+                for (int i = 0; i < mDuck.getRowCount(); ++i) {
+                    mDuck.removeRow(i);
+                }
+            }
         } else {
             while (mCert.getRowCount() > 0) {
                 for (int i = 0; i < mCert.getRowCount(); ++i) {
@@ -940,9 +1046,10 @@ public class BRData01 extends javax.swing.JFrame {
         }
 
     }
+
     private void InforDetailwithnopene() {
 
-        List<String> getListInforDetail = cld.InforDetailwithnopene(BRLogin.vFarm,jcbHouse.getSelectedItem().toString(),sdf2.format(jXDateStart.getDate()), sdf2.format(jXDateEnd.getDate()));
+        List<String> getListInforDetail = cld.InforDetailwithnopene(BRLogin.vFarm, jcbHouse.getSelectedItem().toString(), sdf2.format(jXDateStart.getDate()), sdf2.format(jXDateEnd.getDate()));
         ResetModel();
 
         for (int i = 0; i < getListInforDetail.size(); i++) {
@@ -959,10 +1066,10 @@ public class BRData01 extends javax.swing.JFrame {
         }
 
     }
-    
+
     private void InforDetailwithpene() {
 
-        List<String> getListInforDetail = cld.GetResultInforDetailWithPene(BRLogin.vFarm,jcbItem.getSelectedItem().toString(),jcbHouse.getSelectedItem().toString(),sdf2.format(jXDateStart.getDate()), sdf2.format(jXDateEnd.getDate()));
+        List<String> getListInforDetail = cld.GetResultInforDetailWithPene(BRLogin.vFarm, jcbItem.getSelectedItem().toString(), jcbHouse.getSelectedItem().toString(), sdf2.format(jXDateStart.getDate()), sdf2.format(jXDateEnd.getDate()));
         ResetModel();
 
         for (int i = 0; i < getListInforDetail.size(); i++) {
@@ -1049,6 +1156,65 @@ public class BRData01 extends javax.swing.JFrame {
 
     }
 
+    private void DuckDetail(String Ducktype) {
+        String table = "";
+        switch (Ducktype) {
+            case "Grower List":
+                table = "FAR_GROWER";
+                break;
+            case "Layer List":
+                table = "FAR_LAYING";
+                break;
+            case "Moulting Grower List":
+                table = "FAR_GROWERMT";
+                break;
+            case "Mouting Layer List":
+                table = "FAR_LAYINGMT";
+                break;
+            case "Meat Duck List":
+                table = "FAR_GROWER";
+                break;
+            default:
+                break;
+        }
+
+        List<String> getListItemDuckDetail = cld.GetResultDuckRecieved(BRLogin.vFarm, BRLogin.vDuckBreed, table);
+        ResetModel();
+
+        for (int i = 0; i < getListItemDuckDetail.size(); i++) {
+            String[] CheckItemDuckDetail = getListItemDuckDetail.get(i).split(";");
+//            String ITGR_STATUS;
+//            if ("0".equals(CheckItemGroupDetail[2].trim()) || "".equals(CheckItemGroupDetail[2].trim())) {
+//                ITGR_STATUS = "No";
+//            } else {
+//                ITGR_STATUS = "Yes";
+//            }
+
+            mDuck.insertRow(mDuck.getRowCount(), new Object[]{
+                CheckItemDuckDetail[0].trim(),
+                CheckItemDuckDetail[1].trim(),
+                CheckItemDuckDetail[2].trim(),
+                CheckItemDuckDetail[3].trim(),
+                CheckItemDuckDetail[4].trim(),
+                CheckItemDuckDetail[5].trim(),
+                CheckItemDuckDetail[6].trim(),
+                CheckItemDuckDetail[7].trim(),
+                CheckItemDuckDetail[8].trim(),
+                CheckItemDuckDetail[9].trim(),
+                CheckItemDuckDetail[10].trim(),
+                CheckItemDuckDetail[11].trim(),
+                CheckItemDuckDetail[12].trim(),
+                CheckItemDuckDetail[13].trim(),
+                CheckItemDuckDetail[14].trim(),
+                CheckItemDuckDetail[15].trim(),
+                CheckItemDuckDetail[16].trim(),
+                CheckItemDuckDetail[17].trim()
+//                CheckItemDuckDetail[18].trim()
+            });
+        }
+
+    }
+
     private void CertDetail() {
 
         List<String> getListCertDetail = cld.GetResultCertDetail(BRLogin.vFarm);
@@ -1095,6 +1261,8 @@ public class BRData01 extends javax.swing.JFrame {
                 UnitDetail();
             } else if ("Group".equals(JPanel)) {
                 GroupDetail();
+            } else if ("DuckRec".equals(JPanel)) {
+                DuckDetail(jComboBox1.getSelectedItem().toString());
             } else if ("Cert".equals(JPanel)) {
                 CertDetail();
             }
@@ -1364,6 +1532,66 @@ public class BRData01 extends javax.swing.JFrame {
                 new BRItemUnit01().setVisible(true);
                 OnChange = "Yes";
             }
+        } else if ("DuckRec".equals(JPanel) && jMenuChange.isEnabled() == true) {
+            int index = jTableDuck.getSelectedRow();
+            if (index < 0) {
+                JOptionPane.showMessageDialog(null, "Please select Duck Recieved record for Change!");
+            } else {
+                String Ducktype = jComboBox1.getSelectedItem().toString();
+                String table = "";
+                String menutype = "";
+                switch (Ducktype) {
+                    case "Grower List":
+                        table = "FAR_GROWER";
+                        menutype = "BRDuck02()";
+                        break;
+                    case "Layer List":
+                        table = "FAR_LAYING";
+                        menutype = "BRDuck03()";
+                        break;
+                    case "Moulting Grower List":
+                        table = "FAR_GROWERMT";
+                        menutype = "BRDuck02()";
+                        break;
+                    case "Mouting Layer List":
+                        table = "FAR_LAYINGMT";
+                        menutype = "BRDuck03()";
+                        break;
+                    case "Meat Duck List":
+                        table = "FAR_GROWER";
+                        menutype = "BRDuck02()";
+                        break;
+                    default:
+                        break;
+                }
+                vDUCK_FLOCK = String.valueOf(mDuck.getValueAt(jTableDuck.getSelectedRow(), 0));
+                vDUCK_HOUSE = String.valueOf(mDuck.getValueAt(jTableDuck.getSelectedRow(), 1));
+                vDUCK_DATEREC = String.valueOf(mDuck.getValueAt(jTableDuck.getSelectedRow(), 2));
+                vDUCK_MO = String.valueOf(mDuck.getValueAt(jTableDuck.getSelectedRow(), 3));
+                vDUCK_FARM = BRLogin.vFarm;
+                vDUCK_Type = table;
+
+                switch (Ducktype) {
+                    case "Grower List":
+                        new BRDuck02().setVisible(true);
+                        break;
+                    case "Layer List":
+                        new BRDuck03().setVisible(true);
+                        break;
+                    case "Moulting Grower List":
+                        new BRDuck02().setVisible(true);
+                        break;
+                    case "Mouting Layer List":
+                        new BRDuck03().setVisible(true);
+                        break;
+                    case "Meat Duck List":
+                        new BRDuck02().setVisible(true);
+                        break;
+                    default:
+                        break;
+                }
+//                OnChange = "Yes";
+            }
         } else if ("Group".equals(JPanel) && jMenuChange.isEnabled() == true) {
             int index = jTableGroup.getSelectedRow();
             if (index < 0) {
@@ -1631,6 +1859,8 @@ public class BRData01 extends javax.swing.JFrame {
             UnitDetail();
         } else if ("Group".equals(JPanel)) {
             GroupDetail();
+        } else if ("DuckRec".equals(JPanel)) {
+            DuckDetail(jComboBox1.getSelectedItem().toString());
         } else if ("Cert".equals(JPanel)) {
             CertDetail();
         }
@@ -1659,13 +1889,44 @@ public class BRData01 extends javax.swing.JFrame {
 //         TODO add your handling code here:
         if ("Please Select : House".equals(jcbHouse.getSelectedItem().toString())) {
             InforDetail();
-        } else if("Please Select : Pene".equals(jcbItem.getSelectedItem().toString())){
-           InforDetailwithnopene();
-        }
-        else{
+        } else if ("Please Select : Pene".equals(jcbItem.getSelectedItem().toString())) {
+            InforDetailwithnopene();
+        } else {
             InforDetailwithpene();
         }
     }//GEN-LAST:event_jButtonSearchActionPerformed
+
+    private void jpDuckListComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jpDuckListComponentShown
+        // TODO add your handling code here:
+        JPanel = "DuckRec";
+        DuckDetail(jComboBox1.getSelectedItem().toString());
+        jMenuCreate.setEnabled(false);
+        jMenuDelete.setEnabled(false);
+    }//GEN-LAST:event_jpDuckListComponentShown
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jTableDuckMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDuckMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableDuckMouseClicked
+
+    private void jTabbedPaneComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jTabbedPaneComponentShown
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jTabbedPaneComponentShown
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        // TODO add your handling code here:
+        DuckDetail(jComboBox1.getSelectedItem().toString());
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
+
+    private void jpDuckListComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jpDuckListComponentHidden
+        // TODO add your handling code here:
+        jMenuCreate.setEnabled(true);
+        jMenuDelete.setEnabled(true);
+    }//GEN-LAST:event_jpDuckListComponentHidden
 
     /**
      * @param args the command line arguments
@@ -1703,6 +1964,8 @@ public class BRData01 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonClose;
     private javax.swing.JButton jButtonSearch;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelFlockSTDate;
     private javax.swing.JLabel jLabelFlockSTDate1;
     private javax.swing.JLabel jLabelHouse;
@@ -1716,6 +1979,7 @@ public class BRData01 extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -1725,6 +1989,7 @@ public class BRData01 extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JTable jTableCert;
+    private javax.swing.JTable jTableDuck;
     private javax.swing.JTable jTableFarm;
     private javax.swing.JTable jTableFlock;
     private javax.swing.JTable jTableGroup;
@@ -1739,6 +2004,7 @@ public class BRData01 extends javax.swing.JFrame {
     private javax.swing.JComboBox jcbHouse;
     private javax.swing.JComboBox jcbItem;
     private javax.swing.JPanel jpCert;
+    private javax.swing.JPanel jpDuckList;
     private javax.swing.JPanel jpFarm;
     private javax.swing.JPanel jpGroup;
     private javax.swing.JPanel jpHouse;
