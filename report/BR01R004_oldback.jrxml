@@ -667,7 +667,7 @@ on a.TRAN_HOUSE = be.TRAN_HOUSE
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="9" isBold="true" isUnderline="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{TOTAL_SUM_HCG} / $V{TOTAL_SM_HC} * 100]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{TOTAL_AVG_HCG}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0">
 					<reportElement x="705" y="0" width="18" height="16" uuid="3cfa79c7-9c80-41a7-9ccb-346b32caa386"/>
@@ -687,7 +687,7 @@ on a.TRAN_HOUSE = be.TRAN_HOUSE
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="9" isBold="true" isUnderline="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{TOTAL_SUM_HCD}/$V{TOTAL_SM_HC}*100]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{TOTAL_AVG_HCD}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0">
 					<reportElement x="596" y="0" width="19" height="16" uuid="8dc91c5d-16d0-4199-ae3c-2bb2f0bdbb91"/>
@@ -707,7 +707,7 @@ on a.TRAN_HOUSE = be.TRAN_HOUSE
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="9" isBold="true" isUnderline="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{TOTAL_SUM_HCS}/$V{TOTAL_SM_HC}* 100]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{TOTAL_AVG_HCS}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00">
 					<reportElement x="723" y="0" width="17" height="16" uuid="f5e8fe7b-60dd-4b2d-8e20-733b3e7ec43d"/>
@@ -717,7 +717,7 @@ on a.TRAN_HOUSE = be.TRAN_HOUSE
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="TH SarabunPSK" size="9" isBold="true" isUnderline="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{TOTAL_SUM_HCC}/$V{TOTAL_SM_HC}*100]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{TOTAL_AVG_HCC}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0">
 					<reportElement x="669" y="0" width="18" height="16" uuid="a33334bd-6f9b-48c2-a068-3adb75cd4b21"/>
@@ -2052,7 +2052,7 @@ Y]]></text>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="9" isBold="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{GTOTAL_SUM_HCG}/$V{GTOTAL_SM_HC}* 100]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{GTOTAL_AVG_HCG}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="632" y="0" width="19" height="18" uuid="32eb2041-486d-4561-98e6-9deb1e3a871f"/>
@@ -2072,7 +2072,7 @@ Y]]></text>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="9" isBold="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{GTOTAL_SUM_HCS}/$V{GTOTAL_SM_HC}* 100]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{GTOTAL_AVG_HCS}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="669" y="0" width="18" height="18" uuid="1d99c6c6-381f-4108-ac68-da41759688f5"/>
@@ -2092,7 +2092,7 @@ Y]]></text>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="9" isBold="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{GTOTAL_SUM_HCD}/$V{GTOTAL_SM_HC}* 100]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{GTOTAL_AVG_HCD}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="705" y="0" width="18" height="18" uuid="6c75d1d6-a2ee-4153-96b5-78c11513bc1c"/>
@@ -2112,7 +2112,7 @@ Y]]></text>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="9" isBold="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{GTOTAL_SUM_HCC}/$V{GTOTAL_SM_HC} * 100]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{GTOTAL_AVG_HCC}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="740" y="0" width="17" height="18" uuid="6f62e57d-0ffe-4937-9dba-e6c3c60e5663"/>
@@ -2212,7 +2212,7 @@ Y]]></text>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="TH SarabunPSK" size="9" isBold="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($V{GTOTAL_SM_GPF} + $V{GTOTAL_SM_PCF} + $V{GTOTAL_SM_PDF})>0?($V{GTOTAL_SM_PDF} * 100) / ($V{GTOTAL_SM_GPF} + $V{GTOTAL_SM_PCF} + $V{GTOTAL_SM_PDF}):0]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($V{GTOTAL_SM_GPM} + $V{GTOTAL_SM_PCM} + $V{GTOTAL_SM_PDM}) > 0?($V{GTOTAL_SM_PCM} * 100) / ($V{GTOTAL_SM_GPM} + $V{GTOTAL_SM_PCM} + $V{GTOTAL_SM_PDM}):0]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
