@@ -66,6 +66,7 @@ public class BR01R004_CM extends javax.swing.JFrame {
         jcbApprove = new javax.swing.JComboBox();
         jcbGiver = new javax.swing.JComboBox();
         jLabelFemale32 = new javax.swing.JLabel();
+        btnPrintBag = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -124,37 +125,48 @@ public class BR01R004_CM extends javax.swing.JFrame {
 
         jLabelFemale32.setText("Given by  :");
 
+        btnPrintBag.setText("Print With Feed Bag");
+        btnPrintBag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintBagActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelTransport4Layout = new javax.swing.GroupLayout(jPanelTransport4);
         jPanelTransport4.setLayout(jPanelTransport4Layout);
         jPanelTransport4Layout.setHorizontalGroup(
             jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTransport4Layout.createSequentialGroup()
-                .addComponent(jLabelCode9)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanelTransport4Layout.createSequentialGroup()
                 .addGap(65, 65, 65)
+                .addGroup(jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelFlockSTDate1)
+                    .addComponent(jLabelFlockSTDate))
+                .addGap(32, 32, 32)
+                .addGroup(jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jXDateStart, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                    .addComponent(jXDateEnd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(111, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelTransport4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnPrintBag)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnPrint)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonClose)
+                .addGap(59, 59, 59))
+            .addGroup(jPanelTransport4Layout.createSequentialGroup()
                 .addGroup(jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelCode9)
                     .addGroup(jPanelTransport4Layout.createSequentialGroup()
-                        .addGroup(jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabelFlockSTDate1)
-                            .addComponent(jLabelFlockSTDate))
-                        .addGap(32, 32, 32)
-                        .addGroup(jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jXDateStart, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
-                            .addComponent(jXDateEnd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanelTransport4Layout.createSequentialGroup()
+                        .addGap(65, 65, 65)
                         .addGroup(jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabelFemale31)
                             .addComponent(jLabelFemale32))
-                        .addGap(18, 18, 18)
+                        .addGap(22, 22, 22)
                         .addGroup(jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelTransport4Layout.createSequentialGroup()
-                                .addComponent(btnPrint)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButtonClose))
                             .addComponent(jcbGiver, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jcbApprove, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanelTransport4Layout.setVerticalGroup(
             jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,11 +188,12 @@ public class BR01R004_CM extends javax.swing.JFrame {
                 .addGroup(jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelFemale31)
                     .addComponent(jcbApprove, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelTransport4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPrintBag)
                     .addComponent(btnPrint)
                     .addComponent(jButtonClose))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         setJMenuBar(jMenuBar1);
@@ -262,6 +275,21 @@ public class BR01R004_CM extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jcbGiverKeyPressed
 
+    private void btnPrintBagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintBagActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        if (jcbApprove.getSelectedItem().toString().equals("")) {
+            JOptionPane.showMessageDialog(null, "Please Select Approver!");
+        } else if (jcbGiver.getSelectedItem().toString().equals("")) {
+            JOptionPane.showMessageDialog(null, "Please Select Giver!");
+        } else {
+            btnPrint.enable(false);
+            InsertDInvenBal();
+            cgr.rBR01R004("BR01R004_CM_bag", BRLogin.vFarm, BRLogin.vDuckBreed, BRLogin.vDuckBreedAll, sdf2.format(jXDateStart.getDate()), sdf2.format(jXDateEnd.getDate()), jcbGiver.getSelectedItem().toString(), jcbApprove.getSelectedItem().toString());
+            btnPrint.enable(true);
+        }
+    }//GEN-LAST:event_btnPrintBagActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -297,6 +325,7 @@ public class BR01R004_CM extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPrint;
+    private javax.swing.JButton btnPrintBag;
     private javax.swing.JButton jButtonClose;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelCode9;
