@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.5.1  -->
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BF01R004" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffd84165-eee5-4a4c-889a-7fb0c0510697">
 	<property name="ireport.zoom" value="2.479338842975216"/>
 	<property name="ireport.x" value="86"/>
@@ -48,7 +48,8 @@
 FROM
 (SELECT FLOC_FARM,FARM_NAME,SUBSTR(FLOC_CODE,0,4) AS FLOC_CODE,a.TRAN_HOUSE,REC_DATE,WK_DATE,WEEK,AGE,SUM_DAY,
 COALESCE(ROUND((((SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330) * 1000) / (BAL_PSF + BAL_PSM + SM_PCF + SM_PCM + SM_PDF + SM_PDM)) / SUM_DAY,2),0) AS GDD,
-COALESCE(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330,0) AS SM_FEED,COALESCE(SM_FM010,0) AS SM_FM010,COALESCE(SM_FM020,0) AS SM_FM020,COALESCE(SM_FM030,0) AS SM_FM030,
+COALESCE(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330 + SM_BAG31 + SM_BAG32 + SM_BAG33 + SM_BAG41 + SM_BAG42 + SM_BAG43,0) AS SM_FEED
+,COALESCE(SM_FM010,0) AS SM_FM010,COALESCE(SM_FM020,0) AS SM_FM020,COALESCE(SM_FM030,0) AS SM_FM030,
 COALESCE(SM_FM040,0) AS SM_FM040,COALESCE(SM_FM050,0) AS SM_FM050,COALESCE(SM_FM060,0) AS SM_FM060,COALESCE(SM_FM070,0) AS SM_FM070,COALESCE(SM_FM310,0) AS SM_FM310,COALESCE(SM_FM320,0) AS SM_FM320,COALESCE(SM_FM330,0) AS SM_FM330,
 COALESCE(SM_BAG31,0) AS SM_BAG31,COALESCE(SM_BAG32,0) AS SM_BAG32,COALESCE(SM_BAG33,0) AS SM_BAG33,COALESCE(SM_BAG41,0) AS SM_BAG41,COALESCE(SM_BAG42,0) AS SM_BAG42,COALESCE(SM_BAG43,0) AS SM_BAG43,
 COALESCE(BAL_PSF,0) AS BAL_PSF,COALESCE(BAL_PSM,0) AS BAL_PSM,COALESCE(SM_PCF,0) AS SM_PCF,COALESCE(SM_PCM,0) AS SM_PCM,COALESCE(SM_PDF,0) AS SM_PDF,COALESCE(SM_PDM,0) AS SM_PDM,
