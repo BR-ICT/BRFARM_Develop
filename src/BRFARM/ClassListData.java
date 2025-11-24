@@ -2818,7 +2818,7 @@ public class ClassListData {
 //                    + "COALESCE(SUM(CASE WHEN TRAN_ITEM = '" + hcc004 + "' THEN TRAN_QTY*-1 END),0) AS BEHCC004\n"
 //                    + "From FAR_MTRANSECTION where TRAN_TYPE = 'BE' GROUP BY TRAN_LOTNO) as b\n"
 //                    + "ON b.Blot = a.TRAN_LOTNO";
-            ResultSet rs = sta.executeQuery(Sql);
+                ResultSet rs = sta.executeQuery(Sql);
 
             while (rs.next()) {
                 getListDiseMInform.add(

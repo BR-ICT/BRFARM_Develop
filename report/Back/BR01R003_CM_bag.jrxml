@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.7715610000000577"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DB2_Fixed"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="My data"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="195"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="800"/>
@@ -49,8 +49,11 @@
 ROUND(((JULIANDAY(SUBSTR(a.TRAN_DATE,7)||"-"||SUBSTR(a.TRAN_DATE,4,2)||"-"||SUBSTR(a.TRAN_DATE,1,2)) - JULIANDAY(SUBSTR(WK_DATE,7)||"-"||SUBSTR(WK_DATE,4,2)||"-"||SUBSTR(WK_DATE,1,2))) / 7) +1) AS F_47,
 HOUS_CODE,HOUS_NAME,M_LASTMO,REC_DATE,WK_DATE,
 ROUND(((SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330) * 1000) / (SM_PCF2 + SM_PCF1 + SM_PCF + SM_PCM + SM_PDF + SM_PDM),2) AS F_2,
-ROUND(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330,2) AS SM_FEED,ROUND(SM_FM010,2) AS SM_FM010,ROUND(SM_FM020,4) AS SM_FM020,ROUND(SM_FM030,2) AS SM_FM030,ROUND(SM_FM040,2) AS SM_FM040,ROUND(SM_FM050,2) AS SM_FM050,
+ROUND(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330 + SM_BAG31 + SM_BAG32 + SM_BAG33 + SM_BAG41 + SM_BAG42 + SM_BAG43,2) AS SM_FEED
+,ROUND(SM_FM010,2) AS SM_FM010,ROUND(SM_FM020,4) AS SM_FM020,ROUND(SM_FM030,2) AS SM_FM030,ROUND(SM_FM040,2) AS SM_FM040,ROUND(SM_FM050,2) AS SM_FM050,
 ROUND(SM_FM060,2) AS SM_FM060,ROUND(SM_FM070,2) AS SM_FM070,ROUND(SM_FM310,2) AS SM_FM310,ROUND(SM_FM320,2) AS SM_FM320,ROUND(SM_FM330,2) AS SM_FM330,
+ROUND(SM_BAG41,2) as SM_BAG41,ROUND(SM_BAG42,2) as SM_BAG42,ROUND(SM_BAG43,2) as SM_BAG43,ROUND(SM_BAG31,2) as SM_BAG31,ROUND(SM_BAG32,2) as SM_BAG32,
+ROUND(SM_BAG33,2) as SM_BAG33,
 SM_PCF2,SM_PCF1,SM_PCF,SM_PCM,SM_PDF,SM_PDM,
 SM_HCG + SM_HCS + SM_HCD + SM_HCC AS SM_HC,COALESCE(ROUND((((SM_HCG + SM_HCS + SM_HCD + SM_HCC) / (SM_PCF2 + SM_PCF+ SM_PDF)) / SUM_DAY) * 100,2),0) AS PC_HC,
 COALESCE(W_HCG,0) AS F29,
@@ -66,16 +69,23 @@ FROM FAR_MTRANSECTION
 ORDER BY SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) ASC) AS a
 LEFT JOIN
 (SELECT TRAN_DATE,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120010' OR TRAN_ITEM = 'FM120014' OR  TRAN_ITEM = 'FM120015') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM010,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120020' OR TRAN_ITEM = 'FM120026' OR TRAN_ITEM =  'FM120027')  THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM020,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120030' OR TRAN_ITEM = 'FM120036' OR  TRAN_ITEM = 'FM120037') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM030,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120040' OR TRAN_ITEM = 'FM120053' OR  TRAN_ITEM =  'FM120054') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM040,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120050' OR TRAN_ITEM = 'FM120063' OR  TRAN_ITEM = 'FM120064')  THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM050,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120060' OR TRAN_ITEM = 'FM120073' OR  TRAN_ITEM = 'FM120074') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM060,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120010' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM010,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120020' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM020,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120030' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM030,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120040' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM040,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120050' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM050,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120060' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM060,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120070' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM070,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130010' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM310,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130020' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM320,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130030' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM330,
+--BAG
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120053' OR  TRAN_ITEM =  'FM120054') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG41,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120063' OR  TRAN_ITEM = 'FM120064') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG42,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120073' OR  TRAN_ITEM = 'FM120074') THEN TRAN_QTY* -1 ELSE 0 END ) AS SM_BAG43,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120014' OR  TRAN_ITEM = 'FM120015')THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG31,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120026' OR TRAN_ITEM =  'FM120027') THEN TRAN_QTY* -1 ELSE 0 END )AS SM_BAG32,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120036' OR  TRAN_ITEM = 'FM120037') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG33,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PCF' THEN TRAN_QTY ELSE 0 END ) AS SM_PCF,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PCM' THEN TRAN_QTY ELSE 0 END ) AS SM_PCM,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PDF' THEN TRAN_QTY ELSE 0 END ) AS SM_PDF,
@@ -181,8 +191,12 @@ SELECT a.TRAN_DATE,JULIANDAY(SUBSTR(a.TRAN_DATE,7)||"-"||SUBSTR(a.TRAN_DATE,4,2)
 ROUND(((JULIANDAY(SUBSTR(a.TRAN_DATE,7)||"-"||SUBSTR(a.TRAN_DATE,4,2)||"-"||SUBSTR(a.TRAN_DATE,1,2)) - JULIANDAY(SUBSTR(WK_DATE,7)||"-"||SUBSTR(WK_DATE,4,2)||"-"||SUBSTR(WK_DATE,1,2))) / 7) +1) AS F_47,
 HOUS_CODE,HOUS_NAME,M_LASTMO,REC_DATE,WK_DATE,
 ROUND(((SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330) * 1000) / (SM_PCF2 + SM_PCF1 + SM_PCF + SM_PCM + SM_PDF + SM_PDM),2) AS F_2,
-ROUND(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330,2) AS SM_FEED,ROUND(SM_FM010,2) AS SM_FM010,ROUND(SM_FM020,4) AS SM_FM020,ROUND(SM_FM030,2) AS SM_FM030,ROUND(SM_FM040,2) AS SM_FM040,ROUND(SM_FM050,2) AS SM_FM050,
-ROUND(SM_FM060,2) AS SM_FM060,ROUND(SM_FM070,2) AS SM_FM070,ROUND(SM_FM310,2) AS SM_FM310,ROUND(SM_FM320,2) AS SM_FM320,ROUND(SM_FM330,2) AS SM_FM330,SM_PCF2,SM_PCF1,SM_PCF,SM_PCM,SM_PDF,SM_PDM,
+ROUND(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330 + SM_BAG31 + SM_BAG32 + SM_BAG33 + SM_BAG41 + SM_BAG42 + SM_BAG43 ,2) AS SM_FEED
+,ROUND(SM_FM010,2) AS SM_FM010,ROUND(SM_FM020,4) AS SM_FM020,ROUND(SM_FM030,2) AS SM_FM030,ROUND(SM_FM040,2) AS SM_FM040,ROUND(SM_FM050,2) AS SM_FM050,
+ROUND(SM_FM060,2) AS SM_FM060,ROUND(SM_FM070,2) AS SM_FM070,ROUND(SM_FM310,2) AS SM_FM310,ROUND(SM_FM320,2) AS SM_FM320,ROUND(SM_FM330,2) AS SM_FM330,
+ROUND(SM_BAG41,2) as SM_BAG41,ROUND(SM_BAG42,2) as SM_BAG42,ROUND(SM_BAG43,2) as SM_BAG43,ROUND(SM_BAG31,2) as SM_BAG31,ROUND(SM_BAG32,2) as SM_BAG32,
+ROUND(SM_BAG33,2) as SM_BAG33,
+SM_PCF2,SM_PCF1,SM_PCF,SM_PCM,SM_PDF,SM_PDM,
 SM_HCG + SM_HCS + SM_HCD + SM_HCC AS SM_HC,COALESCE(ROUND((((SM_HCG + SM_HCS + SM_HCD + SM_HCC) / (SM_PCF2 + SM_PCF+ SM_PDF)) / SUM_DAY) * 100,2),0) AS PC_HC,
 COALESCE(W_HCG,0) AS F29,
 SM_HCG,ROUND(COALESCE((SM_HCG * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCG,
@@ -197,16 +211,23 @@ FROM FAR_MTRANSECTION
 ORDER BY SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) ASC) AS a
 LEFT JOIN
 (SELECT TRAN_DATE,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120010' OR TRAN_ITEM = 'FM120014' OR  TRAN_ITEM = 'FM120015') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM010,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120020' OR TRAN_ITEM = 'FM120026' OR TRAN_ITEM =  'FM120027')  THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM020,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120030' OR TRAN_ITEM = 'FM120036' OR  TRAN_ITEM = 'FM120037') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM030,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120040' OR TRAN_ITEM = 'FM120053' OR  TRAN_ITEM =  'FM120054') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM040,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120050' OR TRAN_ITEM = 'FM120063' OR  TRAN_ITEM = 'FM120064')  THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM050,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120060' OR TRAN_ITEM = 'FM120073' OR  TRAN_ITEM = 'FM120074') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM060,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120010' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM010,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120020' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM020,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120030' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM030,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120040' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM040,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120050' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM050,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120060' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM060,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120070' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM070,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130010' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM310,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130020' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM320,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130030' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM330,
+--BAG
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120053' OR  TRAN_ITEM = 'FM120054') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG41,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120063' OR TRAN_ITEM =  'FM120064') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG42,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120073' OR TRAN_ITEM =  'FM120074') THEN TRAN_QTY* -1 ELSE 0 END ) AS SM_BAG43,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120014' OR TRAN_ITEM =  'FM120015')THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG31,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120026' OR TRAN_ITEM =  'FM120027') THEN TRAN_QTY* -1 ELSE 0 END )AS SM_BAG32,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120036' OR TRAN_ITEM =  'FM120037') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG33,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PCF' THEN TRAN_QTY ELSE 0 END ) AS SM_PCF,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PCM' THEN TRAN_QTY ELSE 0 END ) AS SM_PCM,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PDF' THEN TRAN_QTY ELSE 0 END ) AS SM_PDF,
@@ -311,8 +332,12 @@ SELECT a.TRAN_DATE,JULIANDAY(SUBSTR(a.TRAN_DATE,7)||"-"||SUBSTR(a.TRAN_DATE,4,2)
 ROUND(((JULIANDAY(SUBSTR(a.TRAN_DATE,7)||"-"||SUBSTR(a.TRAN_DATE,4,2)||"-"||SUBSTR(a.TRAN_DATE,1,2)) - JULIANDAY(SUBSTR(WK_DATE,7)||"-"||SUBSTR(WK_DATE,4,2)||"-"||SUBSTR(WK_DATE,1,2))) / 7) +1) AS F_47,
 HOUS_CODE,HOUS_NAME,M_LASTMO,REC_DATE,WK_DATE,
 ROUND(((SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330) * 1000) / (SM_PCF2 + SM_PCF1 + SM_PCF + SM_PCM + SM_PDF + SM_PDM),2) AS F_2,
-ROUND(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330,2) AS SM_FEED,ROUND(SM_FM010,2) AS SM_FM010,ROUND(SM_FM020,4) AS SM_FM020,ROUND(SM_FM030,2) AS SM_FM030,ROUND(SM_FM040,2) AS SM_FM040,ROUND(SM_FM050,2) AS SM_FM050,
-ROUND(SM_FM060,2) AS SM_FM060,ROUND(SM_FM070,2) AS SM_FM070,ROUND(SM_FM310,2) AS SM_FM310,ROUND(SM_FM320,2) AS SM_FM320,ROUND(SM_FM330,2) AS SM_FM330,SM_PCF2,SM_PCF1,SM_PCF,SM_PCM,SM_PDF,SM_PDM,
+ROUND(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330 + SM_BAG31 + SM_BAG32 + SM_BAG33 + SM_BAG41 + SM_BAG42 + SM_BAG43,2) AS SM_FEED
+,ROUND(SM_FM010,2) AS SM_FM010,ROUND(SM_FM020,4) AS SM_FM020,ROUND(SM_FM030,2) AS SM_FM030,ROUND(SM_FM040,2) AS SM_FM040,ROUND(SM_FM050,2) AS SM_FM050,
+ROUND(SM_FM060,2) AS SM_FM060,ROUND(SM_FM070,2) AS SM_FM070,ROUND(SM_FM310,2) AS SM_FM310,ROUND(SM_FM320,2) AS SM_FM320,ROUND(SM_FM330,2) AS SM_FM330,
+ROUND(SM_BAG41,2) as SM_BAG41,ROUND(SM_BAG42,2) as SM_BAG42,ROUND(SM_BAG43,2) as SM_BAG43,ROUND(SM_BAG31,2) as SM_BAG31,ROUND(SM_BAG32,2) as SM_BAG32,
+ROUND(SM_BAG33,2) as SM_BAG33,
+SM_PCF2,SM_PCF1,SM_PCF,SM_PCM,SM_PDF,SM_PDM,
 SM_HCG + SM_HCS + SM_HCD + SM_HCC AS SM_HC,COALESCE(ROUND((((SM_HCG + SM_HCS + SM_HCD + SM_HCC) / (SM_PCF2 + SM_PCF+ SM_PDF)) / SUM_DAY) * 100,2),0) AS PC_HC,
 COALESCE(W_HCG,0) AS F29,
 SM_HCG,ROUND(COALESCE((SM_HCG * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCG,
@@ -327,16 +352,23 @@ FROM FAR_MTRANSECTION
 ORDER BY SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) ASC) AS a
 LEFT JOIN
 (SELECT TRAN_DATE,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120010' OR TRAN_ITEM = 'FM120014' OR  TRAN_ITEM = 'FM120015') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM010,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120020' OR TRAN_ITEM = 'FM120026' OR TRAN_ITEM =  'FM120027')  THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM020,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120030' OR TRAN_ITEM = 'FM120036' OR  TRAN_ITEM = 'FM120037') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM030,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120040' OR TRAN_ITEM = 'FM120053' OR  TRAN_ITEM =  'FM120054') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM040,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120050' OR TRAN_ITEM = 'FM120063' OR  TRAN_ITEM = 'FM120064')  THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM050,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120060' OR TRAN_ITEM = 'FM120073' OR  TRAN_ITEM = 'FM120074') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM060,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120010' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM010,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120020' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM020,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120030' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM030,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120040' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM040,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120050' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM050,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120060' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM060,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120070' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM070,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130010' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM310,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130020' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM320,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130030' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM330,
+--BAG
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120053' OR  TRAN_ITEM ='FM120054') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG41,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120063' OR TRAN_ITEM = 'FM120064') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG42,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120073' OR TRAN_ITEM = 'FM120074') THEN TRAN_QTY* -1 ELSE 0 END ) AS SM_BAG43,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120014' OR TRAN_ITEM = 'FM120015')THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG31,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120026' OR TRAN_ITEM = 'FM120027') THEN TRAN_QTY* -1 ELSE 0 END )AS SM_BAG32,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120036' OR TRAN_ITEM = 'FM120037') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG33,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PCF' THEN TRAN_QTY ELSE 0 END ) AS SM_PCF,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PCM' THEN TRAN_QTY ELSE 0 END ) AS SM_PCM,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PDF' THEN TRAN_QTY ELSE 0 END ) AS SM_PDF,
@@ -441,8 +473,12 @@ SELECT a.TRAN_DATE,JULIANDAY(SUBSTR(a.TRAN_DATE,7)||"-"||SUBSTR(a.TRAN_DATE,4,2)
 ROUND(((JULIANDAY(SUBSTR(a.TRAN_DATE,7)||"-"||SUBSTR(a.TRAN_DATE,4,2)||"-"||SUBSTR(a.TRAN_DATE,1,2)) - JULIANDAY(SUBSTR(WK_DATE,7)||"-"||SUBSTR(WK_DATE,4,2)||"-"||SUBSTR(WK_DATE,1,2))) / 7) +1) AS F_47,
 HOUS_CODE,HOUS_NAME,M_LASTMO,REC_DATE,WK_DATE,
 ROUND(((SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330) * 1000) / (SM_PCF2 + SM_PCF1 + SM_PCF + SM_PCM + SM_PDF + SM_PDM),2) AS F_2,
-ROUND(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330,2) AS SM_FEED,ROUND(SM_FM010,2) AS SM_FM010,ROUND(SM_FM020,4) AS SM_FM020,ROUND(SM_FM030,2) AS SM_FM030,ROUND(SM_FM040,2) AS SM_FM040,ROUND(SM_FM050,2) AS SM_FM050,
-ROUND(SM_FM060,2) AS SM_FM060,ROUND(SM_FM070,2) AS SM_FM070,ROUND(SM_FM310,2) AS SM_FM310,ROUND(SM_FM320,2) AS SM_FM320,ROUND(SM_FM330,2) AS SM_FM330,SM_PCF2,SM_PCF1,SM_PCF,SM_PCM,SM_PDF,SM_PDM,
+ROUND(SM_FM010 + SM_FM020 + SM_FM030 + SM_FM040 + SM_FM050 + SM_FM060 + SM_FM070 + SM_FM310 + SM_FM320 + SM_FM330 + SM_BAG31 + SM_BAG32 + SM_BAG33 + SM_BAG41 + SM_BAG42 + SM_BAG43,2) AS SM_FEED
+,ROUND(SM_FM010,2) AS SM_FM010,ROUND(SM_FM020,4) AS SM_FM020,ROUND(SM_FM030,2) AS SM_FM030,ROUND(SM_FM040,2) AS SM_FM040,ROUND(SM_FM050,2) AS SM_FM050,
+ROUND(SM_FM060,2) AS SM_FM060,ROUND(SM_FM070,2) AS SM_FM070,ROUND(SM_FM310,2) AS SM_FM310,ROUND(SM_FM320,2) AS SM_FM320,ROUND(SM_FM330,2) AS SM_FM330,
+ROUND(SM_BAG41,2) as SM_BAG41,ROUND(SM_BAG42,2) as SM_BAG42,ROUND(SM_BAG43,2) as SM_BAG43,ROUND(SM_BAG31,2) as SM_BAG31,ROUND(SM_BAG32,2) as SM_BAG32,
+ROUND(SM_BAG33,2) as SM_BAG33,
+SM_PCF2,SM_PCF1,SM_PCF,SM_PCM,SM_PDF,SM_PDM,
 SM_HCG + SM_HCS + SM_HCD + SM_HCC AS SM_HC,COALESCE(ROUND((((SM_HCG + SM_HCS + SM_HCD + SM_HCC) / (SM_PCF2 + SM_PCF+ SM_PDF)) / SUM_DAY) * 100,2),0) AS PC_HC,
 COALESCE(W_HCG,0) AS F29,
 SM_HCG,ROUND(COALESCE((SM_HCG * 100) / (SM_HCG + SM_HCS + SM_HCD + SM_HCC),0),2) AS PC_HCG,
@@ -457,16 +493,23 @@ FROM FAR_MTRANSECTION
 ORDER BY SUBSTR(TRAN_DATE,7) || SUBSTR(TRAN_DATE,4,2) || SUBSTR(TRAN_DATE,1,2) ASC) AS a
 LEFT JOIN
 (SELECT TRAN_DATE,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120010' OR TRAN_ITEM = 'FM120014' OR  TRAN_ITEM = 'FM120015') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM010,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120020' OR TRAN_ITEM = 'FM120026' OR TRAN_ITEM =  'FM120027')  THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM020,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120030' OR TRAN_ITEM = 'FM120036' OR  TRAN_ITEM = 'FM120037') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM030,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120040' OR TRAN_ITEM = 'FM120053' OR  TRAN_ITEM =  'FM120054') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM040,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120050' OR TRAN_ITEM = 'FM120063' OR  TRAN_ITEM = 'FM120064')  THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM050,
-SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120060' OR TRAN_ITEM = 'FM120073' OR  TRAN_ITEM = 'FM120074') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM060,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120010' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM010,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120020' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM020,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120030' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM030,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120040' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM040,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120050' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM050,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120060' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM060,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM120070' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM070,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130010' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM310,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130020' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM320,
 SUM(CASE WHEN TRAN_TYPE = 'WOM' AND TRAN_ITEM = 'FM130030' THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_FM330,
+--BAG
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120053' OR TRAN_ITEM = 'FM120054') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG41,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120063' OR TRAN_ITEM = 'FM120064') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG42,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120073' OR TRAN_ITEM = 'FM120074') THEN TRAN_QTY* -1 ELSE 0 END ) AS SM_BAG43,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120014' OR  TRAN_ITEM ='FM120015')THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG31,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120026' OR TRAN_ITEM = 'FM120027') THEN TRAN_QTY* -1 ELSE 0 END )AS SM_BAG32,
+SUM(CASE WHEN TRAN_TYPE = 'WOM' AND (TRAN_ITEM = 'FM120036' OR TRAN_ITEM = 'FM120037') THEN TRAN_QTY * -1 ELSE 0 END ) AS SM_BAG33,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PCF' THEN TRAN_QTY ELSE 0 END ) AS SM_PCF,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PCM' THEN TRAN_QTY ELSE 0 END ) AS SM_PCM,
 SUM(CASE WHEN TRAN_TYPE = 'WOP' AND ITEM_GROUP = 'PDF' THEN TRAN_QTY ELSE 0 END ) AS SM_PDF,
@@ -568,254 +611,272 @@ WHERE SUBSTR(a.TRAN_DATE,7) || SUBSTR(a.TRAN_DATE,4,2) || SUBSTR(a.TRAN_DATE,1,2
 AND AGE >= 0]]>
 	</queryString>
 	<field name="TRAN_DATE" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="TRAN_DATE"/>
 		<property name="com.jaspersoft.studio.field.label" value="TRAN_DATE"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_MTRANSECTION"/>
+		<property name="com.jaspersoft.studio.field.name" value="TRAN_DATE"/>
 	</field>
 	<field name="AGE" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="AGE"/>
 		<property name="com.jaspersoft.studio.field.label" value="AGE"/>
+		<property name="com.jaspersoft.studio.field.name" value="AGE"/>
 	</field>
 	<field name="F_47" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_47"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_47"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_47"/>
 	</field>
 	<field name="HOUS_CODE" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="HOUS_CODE"/>
 		<property name="com.jaspersoft.studio.field.label" value="HOUS_CODE"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_MHOUSE"/>
+		<property name="com.jaspersoft.studio.field.name" value="HOUS_CODE"/>
 	</field>
 	<field name="HOUS_NAME" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="HOUS_NAME"/>
 		<property name="com.jaspersoft.studio.field.label" value="HOUS_NAME"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_MHOUSE"/>
+		<property name="com.jaspersoft.studio.field.name" value="HOUS_NAME"/>
 	</field>
 	<field name="M_LASTMO" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="M_LASTMO"/>
 		<property name="com.jaspersoft.studio.field.label" value="M_LASTMO"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_MHOUSE"/>
+		<property name="com.jaspersoft.studio.field.name" value="M_LASTMO"/>
 	</field>
 	<field name="REC_DATE" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="REC_DATE"/>
 		<property name="com.jaspersoft.studio.field.label" value="REC_DATE"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_FLOCK"/>
+		<property name="com.jaspersoft.studio.field.name" value="REC_DATE"/>
 	</field>
 	<field name="WK_DATE" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="WK_DATE"/>
 		<property name="com.jaspersoft.studio.field.label" value="WK_DATE"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="FAR_FLOCK"/>
+		<property name="com.jaspersoft.studio.field.name" value="WK_DATE"/>
 	</field>
 	<field name="F_2" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_2"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_2"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_2"/>
 	</field>
 	<field name="SM_FEED" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FEED"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FEED"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FEED"/>
 	</field>
 	<field name="SM_FM010" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FM010"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FM010"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM010"/>
 	</field>
 	<field name="SM_FM020" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FM020"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FM020"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM020"/>
 	</field>
 	<field name="SM_FM030" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FM030"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FM030"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM030"/>
 	</field>
 	<field name="SM_FM040" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FM040"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FM040"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM040"/>
 	</field>
 	<field name="SM_FM050" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FM050"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FM050"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM050"/>
 	</field>
 	<field name="SM_FM060" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FM060"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FM060"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM060"/>
 	</field>
 	<field name="SM_FM070" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FM070"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FM070"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM070"/>
 	</field>
 	<field name="SM_FM310" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FM310"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FM310"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM310"/>
 	</field>
 	<field name="SM_FM320" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FM320"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FM320"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM320"/>
 	</field>
 	<field name="SM_FM330" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_FM330"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_FM330"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_FM330"/>
+	</field>
+	<field name="SM_BAG41" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.label" value="SM_BAG41"/>
+	</field>
+	<field name="SM_BAG42" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.label" value="SM_BAG42"/>
+	</field>
+	<field name="SM_BAG43" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.label" value="SM_BAG43"/>
+	</field>
+	<field name="SM_BAG31" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.label" value="SM_BAG31"/>
+	</field>
+	<field name="SM_BAG32" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.label" value="SM_BAG32"/>
+	</field>
+	<field name="SM_BAG33" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.label" value="SM_BAG33"/>
 	</field>
 	<field name="SM_PCF2" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_PCF2"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_PCF2"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_PCF2"/>
 	</field>
 	<field name="SM_PCF1" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_PCF1"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_PCF1"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_PCF1"/>
 	</field>
 	<field name="SM_PCF" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_PCF"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_PCF"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_PCF"/>
 	</field>
 	<field name="SM_PCM" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_PCM"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_PCM"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_PCM"/>
 	</field>
 	<field name="SM_PDF" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_PDF"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_PDF"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_PDF"/>
 	</field>
 	<field name="SM_PDM" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_PDM"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_PDM"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_PDM"/>
 	</field>
 	<field name="SM_HC" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_HC"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_HC"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_HC"/>
 	</field>
 	<field name="PC_HC" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="PC_HC"/>
 		<property name="com.jaspersoft.studio.field.label" value="PC_HC"/>
+		<property name="com.jaspersoft.studio.field.name" value="PC_HC"/>
 	</field>
 	<field name="F29" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F29"/>
 		<property name="com.jaspersoft.studio.field.label" value="F29"/>
+		<property name="com.jaspersoft.studio.field.name" value="F29"/>
 	</field>
 	<field name="SM_HCG" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_HCG"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_HCG"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_HCG"/>
 	</field>
 	<field name="PC_HCG" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="PC_HCG"/>
 		<property name="com.jaspersoft.studio.field.label" value="PC_HCG"/>
+		<property name="com.jaspersoft.studio.field.name" value="PC_HCG"/>
 	</field>
 	<field name="SM_HCS" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_HCS"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_HCS"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_HCS"/>
 	</field>
 	<field name="PC_HCS" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="PC_HCS"/>
 		<property name="com.jaspersoft.studio.field.label" value="PC_HCS"/>
+		<property name="com.jaspersoft.studio.field.name" value="PC_HCS"/>
 	</field>
 	<field name="SM_HCD" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_HCD"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_HCD"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_HCD"/>
 	</field>
 	<field name="PC_HCD" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="PC_HCD"/>
 		<property name="com.jaspersoft.studio.field.label" value="PC_HCD"/>
+		<property name="com.jaspersoft.studio.field.name" value="PC_HCD"/>
 	</field>
 	<field name="SM_HCC" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="SM_HCC"/>
 		<property name="com.jaspersoft.studio.field.label" value="SM_HCC"/>
+		<property name="com.jaspersoft.studio.field.name" value="SM_HCC"/>
 	</field>
 	<field name="PC_HCC" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="PC_HCC"/>
 		<property name="com.jaspersoft.studio.field.label" value="PC_HCC"/>
+		<property name="com.jaspersoft.studio.field.name" value="PC_HCC"/>
 	</field>
 	<field name="H01" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="H01"/>
 		<property name="com.jaspersoft.studio.field.label" value="H01"/>
+		<property name="com.jaspersoft.studio.field.name" value="H01"/>
 	</field>
 	<field name="H02" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="H02"/>
 		<property name="com.jaspersoft.studio.field.label" value="H02"/>
+		<property name="com.jaspersoft.studio.field.name" value="H02"/>
 	</field>
 	<field name="F_5" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_5"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_5"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_5"/>
 	</field>
 	<field name="F_11" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_11"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_11"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_11"/>
 	</field>
 	<field name="F_7" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_7"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_7"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_7"/>
 	</field>
 	<field name="F_8" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_8"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_8"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_8"/>
 	</field>
 	<field name="F_9" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_9"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_9"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_9"/>
 	</field>
 	<field name="F_10" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_10"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_10"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_10"/>
 	</field>
 	<field name="F_48" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_48"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_48"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_48"/>
 	</field>
 	<field name="F_14" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_14"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_14"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_14"/>
 	</field>
 	<field name="F_50" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_50"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_50"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_50"/>
 	</field>
 	<field name="F_6" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_6"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_6"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_6"/>
 	</field>
 	<field name="F_15" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_15"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_15"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_15"/>
 	</field>
 	<field name="F_52" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_52"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_52"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_52"/>
 	</field>
 	<field name="F_13" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_13"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_13"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_13"/>
 	</field>
 	<field name="F_122" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_122"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_122"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_122"/>
 	</field>
 	<field name="F_124" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_124"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_124"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_124"/>
 	</field>
 	<field name="F_350" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_350"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_350"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_350"/>
 	</field>
 	<field name="F_353" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_353"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_353"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_353"/>
 	</field>
 	<field name="F_359" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_359"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_359"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_359"/>
 	</field>
 	<field name="F_360" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_360"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_360"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_360"/>
 	</field>
 	<field name="F_361" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="F_361"/>
 		<property name="com.jaspersoft.studio.field.label" value="F_361"/>
+		<property name="com.jaspersoft.studio.field.name" value="F_361"/>
 	</field>
 	<field name="EN_PSF" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="EN_PSF"/>
 		<property name="com.jaspersoft.studio.field.label" value="EN_PSF"/>
+		<property name="com.jaspersoft.studio.field.name" value="EN_PSF"/>
 	</field>
 	<field name="EN_PSM" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="EN_PSM"/>
 		<property name="com.jaspersoft.studio.field.label" value="EN_PSM"/>
+		<property name="com.jaspersoft.studio.field.name" value="EN_PSM"/>
 	</field>
 	<variable name="TOTAL_AVG_GDD" class="java.math.BigDecimal" calculation="Average">
 		<variableExpression><![CDATA[$F{F_2}]]></variableExpression>
@@ -967,6 +1028,24 @@ AND AGE >= 0]]>
 	<variable name="TOTAL_SUM_303061" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{F_361}]]></variableExpression>
 	</variable>
+	<variable name="TOTAL_SUM_SM_BAG31" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_BAG31}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_SM_BAG32" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_BAG32}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_SM_BAG33" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_BAG33}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_SM_BAG41" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_BAG41}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_SM_BAG42" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_BAG42}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUM_SM_BAG43" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SM_BAG43} == 0? null : $F{SM_BAG43}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -1093,7 +1172,7 @@ AND AGE >= 0]]>
 	<columnHeader>
 		<band height="69" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="37" height="69" uuid="68e0111f-87a8-4bad-9f8a-d54ea6b287a9"/>
+				<reportElement x="-11" y="0" width="37" height="69" uuid="68e0111f-87a8-4bad-9f8a-d54ea6b287a9"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1103,7 +1182,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="37" y="0" width="21" height="69" uuid="999b5325-6bb4-4b57-86d5-d8405ce2d218"/>
+				<reportElement x="26" y="0" width="21" height="69" uuid="999b5325-6bb4-4b57-86d5-d8405ce2d218"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1113,7 +1192,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Age]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="58" y="0" width="19" height="69" uuid="fc46669e-4d3d-40ea-a758-16e99d416e4c"/>
+				<reportElement x="47" y="0" width="19" height="69" uuid="fc46669e-4d3d-40ea-a758-16e99d416e4c"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1123,7 +1202,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[WK]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="77" y="48" width="26" height="21" backcolor="#FFFFCC" uuid="3f68e272-8a90-4237-917e-4d0ca6768c1b"/>
+				<reportElement mode="Opaque" x="66" y="48" width="26" height="21" backcolor="#FFFFCC" uuid="3f68e272-8a90-4237-917e-4d0ca6768c1b"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1133,7 +1212,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[G/D/D]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="103" y="48" width="27" height="21" backcolor="#FFFFCC" uuid="c1c93fdb-f031-4dfc-aa30-84c09110cf32"/>
+				<reportElement mode="Opaque" x="92" y="48" width="27" height="21" backcolor="#FFFFCC" uuid="c1c93fdb-f031-4dfc-aa30-84c09110cf32"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1143,7 +1222,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Ttl.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="130" y="48" width="21" height="21" backcolor="#FFFFCC" uuid="dcc87147-af42-4862-af0b-9a6a970518d8"/>
+				<reportElement mode="Opaque" x="119" y="48" width="21" height="21" backcolor="#FFFFCC" uuid="dcc87147-af42-4862-af0b-9a6a970518d8"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1153,7 +1232,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[#201]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="77" y="0" width="264" height="48" backcolor="#FFFFCC" uuid="c35109be-3b4f-4b83-ac67-0444132129c4"/>
+				<reportElement mode="Opaque" x="66" y="0" width="264" height="48" backcolor="#FFFFCC" uuid="c35109be-3b4f-4b83-ac67-0444132129c4"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1163,7 +1242,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Feed (Kgs.)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="341" y="0" width="120" height="48" backcolor="#CCFFCC" uuid="04d93e86-2f1f-4757-91d5-e2d0319cb812"/>
+				<reportElement mode="Opaque" x="408" y="0" width="120" height="48" backcolor="#CCFFCC" uuid="04d93e86-2f1f-4757-91d5-e2d0319cb812"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1173,7 +1252,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Duck (Pcs.)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="341" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="34df3eba-ff18-466d-b1e7-5fe6d204b7dc"/>
+				<reportElement mode="Opaque" x="408" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="34df3eba-ff18-466d-b1e7-5fe6d204b7dc"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1183,7 +1262,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[GPF]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="361" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="e627b082-4d2f-4418-b9ee-4c9a304dd9e2"/>
+				<reportElement mode="Opaque" x="428" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="e627b082-4d2f-4418-b9ee-4c9a304dd9e2"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1193,7 +1272,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[GPM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="381" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="56140d69-760d-4102-82d1-ca4ad2b26e72"/>
+				<reportElement mode="Opaque" x="448" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="56140d69-760d-4102-82d1-ca4ad2b26e72"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1203,7 +1282,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[PCF]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="401" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="8a920aff-b220-46ab-9cb4-5dae7d4cddd6"/>
+				<reportElement mode="Opaque" x="468" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="8a920aff-b220-46ab-9cb4-5dae7d4cddd6"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1213,7 +1292,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[PCM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="421" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="55c92f96-5d6f-4e83-9c09-8f7038413bba"/>
+				<reportElement mode="Opaque" x="488" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="55c92f96-5d6f-4e83-9c09-8f7038413bba"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1223,7 +1302,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[PDF]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="441" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="15c8fbfc-b244-4d90-a4ed-59599ec8382d"/>
+				<reportElement mode="Opaque" x="508" y="48" width="20" height="21" backcolor="#CCFFCC" uuid="15c8fbfc-b244-4d90-a4ed-59599ec8382d"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1233,7 +1312,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[PDM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="461" y="0" width="42" height="48" backcolor="#CCFFFF" uuid="7735c415-3da9-4bec-96ab-28e00e586419"/>
+				<reportElement mode="Opaque" x="528" y="0" width="42" height="48" backcolor="#CCFFFF" uuid="7735c415-3da9-4bec-96ab-28e00e586419"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1243,7 +1322,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Production]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="483" y="48" width="20" height="21" backcolor="#CCFFFF" uuid="93e3db0d-2e2d-4403-9d6a-c874cf14bf51"/>
+				<reportElement mode="Opaque" x="550" y="48" width="20" height="21" backcolor="#CCFFFF" uuid="93e3db0d-2e2d-4403-9d6a-c874cf14bf51"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1253,7 +1332,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[%]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="461" y="48" width="22" height="21" backcolor="#CCFFFF" uuid="1d212e6e-1cd5-42a2-b0dd-084b1d50d66d"/>
+				<reportElement mode="Opaque" x="528" y="48" width="22" height="21" backcolor="#CCFFFF" uuid="1d212e6e-1cd5-42a2-b0dd-084b1d50d66d"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1263,7 +1342,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[HC Ttl.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="151" y="48" width="21" height="21" backcolor="#FFFFCC" uuid="554cb8b7-2451-46b0-a705-e4d732a49ff1"/>
+				<reportElement mode="Opaque" x="140" y="48" width="21" height="21" backcolor="#FFFFCC" uuid="554cb8b7-2451-46b0-a705-e4d732a49ff1"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1273,7 +1352,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[#202]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="172" y="48" width="20" height="21" backcolor="#FFFFCC" uuid="42f95b85-1ba5-40aa-99ea-e1af8f06da63"/>
+				<reportElement mode="Opaque" x="161" y="48" width="20" height="21" backcolor="#FFFFCC" uuid="42f95b85-1ba5-40aa-99ea-e1af8f06da63"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1283,7 +1362,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[#203]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="192" y="48" width="20" height="21" backcolor="#FFFFCC" uuid="85f7a5cc-f271-4371-950d-d85ebd52b9c6"/>
+				<reportElement mode="Opaque" x="181" y="48" width="20" height="21" backcolor="#FFFFCC" uuid="85f7a5cc-f271-4371-950d-d85ebd52b9c6"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1293,9 +1372,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[#204]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="713" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="128249ed-1e3b-4234-9b54-4f07b8f3c0a7">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="738" y="48" width="24" height="21" backcolor="#FFCCCC" uuid="128249ed-1e3b-4234-9b54-4f07b8f3c0a7"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1305,9 +1382,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Gms.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="653" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="28d95773-5364-473d-9345-7db47155084a">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="690" y="48" width="24" height="21" backcolor="#FFCCCC" uuid="28d95773-5364-473d-9345-7db47155084a"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1317,9 +1392,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="683" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="00f3a8c0-48a3-44a8-936d-ab92a8e02f62">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="714" y="48" width="24" height="21" backcolor="#FFCCCC" uuid="00f3a8c0-48a3-44a8-936d-ab92a8e02f62"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1329,9 +1402,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="563" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="673e4a96-4e4f-4d08-a407-6bb6151183d4">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="618" y="48" width="24" height="21" backcolor="#FFCCCC" uuid="673e4a96-4e4f-4d08-a407-6bb6151183d4"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1341,9 +1412,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="593" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="c0289208-8eb4-4f37-b671-f8057d2b86ad">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="642" y="48" width="24" height="21" backcolor="#FFCCCC" uuid="c0289208-8eb4-4f37-b671-f8057d2b86ad"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1353,9 +1422,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="743" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="485dff18-3c31-4060-b19e-0923af5f449f">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="762" y="48" width="24" height="21" backcolor="#FFCCCC" uuid="485dff18-3c31-4060-b19e-0923af5f449f"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1365,9 +1432,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="623" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="2cd1597a-5841-4eaf-9acf-f394c592ef37">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="666" y="48" width="24" height="21" backcolor="#FFCCCC" uuid="2cd1597a-5841-4eaf-9acf-f394c592ef37"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1377,9 +1442,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Bot]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="533" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="b660ae52-58da-4f6b-828b-8ac95c18d11f">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="594" y="48" width="24" height="21" backcolor="#FFCCCC" uuid="b660ae52-58da-4f6b-828b-8ac95c18d11f"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1389,9 +1452,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Pcs.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="503" y="48" width="30" height="21" backcolor="#FFCCCC" uuid="2d086c8e-86e9-4c2a-8151-68788d36e318">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="570" y="48" width="24" height="21" backcolor="#FFCCCC" uuid="2d086c8e-86e9-4c2a-8151-68788d36e318"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1401,7 +1462,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Gms.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="503" y="0" width="298" height="18" backcolor="#FFCCCC" uuid="30aa823f-78e2-48bd-9782-740c18dccecb"/>
+				<reportElement mode="Opaque" x="570" y="0" width="240" height="18" backcolor="#FFCCCC" uuid="30aa823f-78e2-48bd-9782-740c18dccecb"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1411,8 +1472,8 @@ AND AGE >= 0]]>
 				<text><![CDATA[Vaccine & Medicine (RM)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="503" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="9ee7d71f-6083-476b-839c-4c40d7dffb24">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement mode="Opaque" x="570" y="27" width="24" height="21" backcolor="#FFCCCC" uuid="9ee7d71f-6083-476b-839c-4c40d7dffb24">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
@@ -1423,9 +1484,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Hidrorex]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="503" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="ae5b6574-a6f6-497e-bb03-435804a74bd8">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="570" y="18" width="24" height="9" backcolor="#FFCCCC" uuid="ae5b6574-a6f6-497e-bb03-435804a74bd8"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1435,9 +1494,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[301022]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="533" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="533c9754-4803-42cc-91a0-69d00dad0dc5">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="594" y="18" width="24" height="9" backcolor="#FFCCCC" uuid="533c9754-4803-42cc-91a0-69d00dad0dc5"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1447,9 +1504,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[301024]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="533" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="fa19625b-275e-4971-b38d-12544549954d">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="594" y="27" width="24" height="21" backcolor="#FFCCCC" uuid="fa19625b-275e-4971-b38d-12544549954d"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1459,9 +1514,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[ENOVIT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="563" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="4234d339-9ebd-4705-b572-d7d333d9f7ef">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="618" y="27" width="24" height="21" backcolor="#FFCCCC" uuid="4234d339-9ebd-4705-b572-d7d333d9f7ef"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1471,9 +1524,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[DP 500]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="563" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="dd37e642-461d-4d9d-8984-4c1ca311e412">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="618" y="18" width="24" height="9" backcolor="#FFCCCC" uuid="dd37e642-461d-4d9d-8984-4c1ca311e412"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1483,9 +1534,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[302002]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="593" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="8f486186-9a2f-465a-9a24-194db2f5dd0b">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="642" y="27" width="24" height="21" backcolor="#FFCCCC" uuid="8f486186-9a2f-465a-9a24-194db2f5dd0b"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1495,9 +1544,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[DP 1000]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="593" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="069d615b-6057-4608-a96e-a1241d1b49cd">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="642" y="18" width="24" height="9" backcolor="#FFCCCC" uuid="069d615b-6057-4608-a96e-a1241d1b49cd"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1507,9 +1554,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[302003]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="623" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="5387d1d3-1fd0-4eeb-bd1d-98d3e80982c6">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="666" y="27" width="24" height="21" backcolor="#FFCCCC" uuid="5387d1d3-1fd0-4eeb-bd1d-98d3e80982c6"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1519,9 +1564,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Kap. 500]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="623" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="0aa9ad85-6de7-41db-9778-6e07e2b16cc6">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="666" y="18" width="24" height="9" backcolor="#FFCCCC" uuid="0aa9ad85-6de7-41db-9778-6e07e2b16cc6"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1531,9 +1574,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[302016]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="653" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="d367ca47-9d06-4fc9-b882-945c73e429a9">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="690" y="27" width="24" height="21" backcolor="#FFCCCC" uuid="d367ca47-9d06-4fc9-b882-945c73e429a9"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1543,9 +1584,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Vetrimoxin]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="653" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="f80f9463-0709-4e36-a5bc-06c9f87f73da">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="690" y="18" width="24" height="9" backcolor="#FFCCCC" uuid="f80f9463-0709-4e36-a5bc-06c9f87f73da"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1555,9 +1594,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[303050]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="683" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="6dad675c-e379-4975-a2d5-091c572a6e17">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="714" y="27" width="24" height="21" backcolor="#FFCCCC" uuid="6dad675c-e379-4975-a2d5-091c572a6e17"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1567,9 +1604,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Topacin]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="683" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="7d3c1258-933e-4648-9c5b-6235b36fa271">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="714" y="18" width="24" height="9" backcolor="#FFCCCC" uuid="7d3c1258-933e-4648-9c5b-6235b36fa271"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1579,9 +1614,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[303053]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="713" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="820e3adf-d0bf-4cbe-9518-ae759f6aa02f">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="738" y="27" width="24" height="21" backcolor="#FFCCCC" uuid="820e3adf-d0bf-4cbe-9518-ae759f6aa02f"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1591,9 +1624,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[VETXILL 50%]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="713" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="4462254b-c5ec-424d-acfe-7c094cc3d967">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="738" y="18" width="24" height="9" backcolor="#FFCCCC" uuid="4462254b-c5ec-424d-acfe-7c094cc3d967"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1603,9 +1634,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[303059]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="743" y="27" width="30" height="21" backcolor="#FFCCCC" uuid="5a04708c-ef6a-436b-8dbc-100d3d91b7f9">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="762" y="27" width="24" height="21" backcolor="#FFCCCC" uuid="5a04708c-ef6a-436b-8dbc-100d3d91b7f9"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1615,9 +1644,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Moxyguard]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="743" y="18" width="30" height="9" backcolor="#FFCCCC" uuid="e2d35498-6063-4963-bc26-cd9c2b35bdff">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="762" y="18" width="24" height="9" backcolor="#FFCCCC" uuid="e2d35498-6063-4963-bc26-cd9c2b35bdff"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1627,7 +1654,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[303060]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="212" y="48" width="24" height="21" backcolor="#FFFFCC" uuid="0b071223-5cd9-4698-bf75-c6b689f63a5b"/>
+				<reportElement mode="Opaque" x="201" y="48" width="24" height="21" backcolor="#FFFFCC" uuid="0b071223-5cd9-4698-bf75-c6b689f63a5b"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1637,7 +1664,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[#205]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="236" y="48" width="20" height="21" backcolor="#FFFFCC" uuid="7575bda8-a44a-41f0-8864-c455d86fba9e"/>
+				<reportElement mode="Opaque" x="225" y="48" width="20" height="21" backcolor="#FFFFCC" uuid="7575bda8-a44a-41f0-8864-c455d86fba9e"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1647,7 +1674,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[#206]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="277" y="48" width="22" height="21" backcolor="#FFFFCC" uuid="8a52b169-0ad1-428f-892e-5656615dd8e9"/>
+				<reportElement mode="Opaque" x="266" y="48" width="22" height="21" backcolor="#FFFFCC" uuid="8a52b169-0ad1-428f-892e-5656615dd8e9"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1657,7 +1684,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[#310]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="299" y="48" width="20" height="21" backcolor="#FFFFCC" uuid="a79fbe05-a155-4b01-bf35-e8689d7d0435"/>
+				<reportElement mode="Opaque" x="288" y="48" width="20" height="21" backcolor="#FFFFCC" uuid="a79fbe05-a155-4b01-bf35-e8689d7d0435"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1667,7 +1694,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[#320]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="319" y="48" width="22" height="21" backcolor="#FFFFCC" uuid="3b3b27eb-df36-4ef5-851e-c48e9aa46de0"/>
+				<reportElement mode="Opaque" x="308" y="48" width="22" height="21" backcolor="#FFFFCC" uuid="3b3b27eb-df36-4ef5-851e-c48e9aa46de0"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1677,7 +1704,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[#330]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="256" y="48" width="21" height="21" backcolor="#FFFFCC" uuid="f0830379-3fc6-4295-a5d7-8c8c7c4c1709"/>
+				<reportElement mode="Opaque" x="245" y="48" width="21" height="21" backcolor="#FFFFCC" uuid="f0830379-3fc6-4295-a5d7-8c8c7c4c1709"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1687,9 +1714,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[#207]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="773" y="18" width="28" height="9" backcolor="#FFCCCC" uuid="46422e25-1a4c-47ca-acc5-c6a555cc5a88">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="786" y="18" width="24" height="9" backcolor="#FFCCCC" uuid="46422e25-1a4c-47ca-acc5-c6a555cc5a88"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1699,21 +1724,19 @@ AND AGE >= 0]]>
 				<text><![CDATA[303060]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="773" y="27" width="28" height="21" backcolor="#FFCCCC" uuid="46982a3e-12c4-4d8b-93d1-5c8604e45baf">
+				<reportElement mode="Opaque" x="786" y="27" width="24" height="21" backcolor="#FFCCCC" uuid="46982a3e-12c4-4d8b-93d1-5c8604e45baf">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement>
-					<font fontName="TH SarabunPSK" size="8" isBold="true"/>
+					<font fontName="TH SarabunPSK" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[AMOXY-S 500]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="773" y="48" width="28" height="21" backcolor="#FFCCCC" uuid="8ee2a9f7-7312-441d-9ebb-fe7c5d0f8c84">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="786" y="48" width="24" height="21" backcolor="#FFCCCC" uuid="8ee2a9f7-7312-441d-9ebb-fe7c5d0f8c84"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1722,12 +1745,94 @@ AND AGE >= 0]]>
 				</textElement>
 				<text><![CDATA[KGS]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="330" y="0" width="78" height="48" backcolor="#FA82E2" uuid="29456a4f-00cf-4e97-b41a-6e29c2d718d6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Feed (Bag.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="330" y="48" width="13" height="21" backcolor="#FA82E2" uuid="e4f052fb-1ce9-446f-a3c6-fbc698f8fed0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[9031]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="343" y="48" width="13" height="21" backcolor="#FA82E2" uuid="bb26cad0-e726-4377-acb0-a4b5dbb1834b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[9032]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="356" y="48" width="13" height="21" backcolor="#FA82E2" uuid="2bd066a8-2694-4d49-88ca-b70d287043da">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[9033]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="369" y="48" width="13" height="21" backcolor="#FA82E2" uuid="c85a9802-39dd-444b-a4cd-e524fcd2ab9c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[9041]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="382" y="48" width="13" height="21" backcolor="#FA82E2" uuid="eef244e7-0086-46d9-b9a7-85a040244896">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[9042]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="395" y="48" width="13" height="21" backcolor="#FA82E2" uuid="0bed8307-2200-42d4-a7da-b21fa25588d8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[9043]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="17" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="37" height="17" uuid="55a806f1-5f85-4dd9-9345-09ecf17ba16a"/>
+				<reportElement x="-11" y="0" width="37" height="17" uuid="55a806f1-5f85-4dd9-9345-09ecf17ba16a"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1737,7 +1842,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[""+$F{TRAN_DATE}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="77" y="0" width="26" height="17" uuid="a98db60a-aafe-41bb-9314-f34ae13ca592"/>
+				<reportElement x="66" y="0" width="26" height="17" uuid="a98db60a-aafe-41bb-9314-f34ae13ca592"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1747,7 +1852,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_2} == 0? null : $F{F_2}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="103" y="0" width="27" height="17" uuid="29370b4b-1e5d-4a6f-a36e-0f23dc3dd5ca"/>
+				<reportElement x="92" y="0" width="27" height="17" uuid="29370b4b-1e5d-4a6f-a36e-0f23dc3dd5ca"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1757,7 +1862,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FEED} == 0? null : $F{SM_FEED}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="130" y="0" width="21" height="17" uuid="31ab8f3f-2605-4ccd-aea1-4e9d3e118650"/>
+				<reportElement x="119" y="0" width="21" height="17" uuid="31ab8f3f-2605-4ccd-aea1-4e9d3e118650"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1767,7 +1872,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FM010} == 0? null : $F{SM_FM010}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="151" y="0" width="21" height="17" uuid="eb0ebe7e-396c-488b-9fd4-f320cafad514"/>
+				<reportElement x="140" y="0" width="21" height="17" uuid="eb0ebe7e-396c-488b-9fd4-f320cafad514"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1777,7 +1882,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FM020} == 0? null : $F{SM_FM020}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="172" y="0" width="20" height="17" uuid="5505c8dc-ee1f-4408-ac2d-322778a29766"/>
+				<reportElement x="161" y="0" width="20" height="17" uuid="5505c8dc-ee1f-4408-ac2d-322778a29766"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1787,7 +1892,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FM030} == 0? null :$F{SM_FM030}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="192" y="0" width="20" height="17" uuid="3d82220c-a6bc-4cbf-95b1-94587c23ce6a"/>
+				<reportElement x="181" y="0" width="20" height="17" uuid="3d82220c-a6bc-4cbf-95b1-94587c23ce6a"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1797,7 +1902,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FM040} == 0? null : $F{SM_FM040}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="37" y="0" width="21" height="17" uuid="102d9095-2a27-412a-b766-61877b90e213"/>
+				<reportElement x="26" y="0" width="21" height="17" uuid="102d9095-2a27-412a-b766-61877b90e213"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1807,7 +1912,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{AGE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="58" y="0" width="19" height="17" uuid="b0c9c6c6-d87f-44a7-b831-8d35bd77e8be"/>
+				<reportElement x="47" y="0" width="19" height="17" uuid="b0c9c6c6-d87f-44a7-b831-8d35bd77e8be"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1817,7 +1922,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_47}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="341" y="0" width="20" height="17" uuid="3d7a1d33-fc58-450b-ad01-ff5d057f270d"/>
+				<reportElement x="408" y="0" width="20" height="17" uuid="3d7a1d33-fc58-450b-ad01-ff5d057f270d"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1827,7 +1932,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_PCF2} == 0? null : $F{SM_PCF2}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="361" y="0" width="20" height="17" uuid="182482d3-5c17-42ec-a118-a0f6b7bc11d3"/>
+				<reportElement x="428" y="0" width="20" height="17" uuid="182482d3-5c17-42ec-a118-a0f6b7bc11d3"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1837,7 +1942,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_PCF1} == 0? null : ""+$F{SM_PCF1}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="381" y="0" width="20" height="17" uuid="1fdf70b6-93c4-416f-83eb-a70d1b443f65"/>
+				<reportElement x="448" y="0" width="20" height="17" uuid="1fdf70b6-93c4-416f-83eb-a70d1b443f65"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1847,7 +1952,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_PCF} == 0? null : $F{SM_PCF}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="401" y="0" width="20" height="17" uuid="63a63df2-cc87-4ba0-985d-2da12590c2f7"/>
+				<reportElement x="468" y="0" width="20" height="17" uuid="63a63df2-cc87-4ba0-985d-2da12590c2f7"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1857,7 +1962,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_PCM} == 0? null : $F{SM_PCM}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="421" y="0" width="20" height="17" uuid="de2cd6a3-3f08-4536-bc82-f19be75416b0"/>
+				<reportElement x="488" y="0" width="20" height="17" uuid="de2cd6a3-3f08-4536-bc82-f19be75416b0"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1867,7 +1972,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_PDF} == 0? null : $F{SM_PDF}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="441" y="0" width="20" height="17" uuid="850869b5-b9cb-465e-9188-4ca3663005ad"/>
+				<reportElement x="508" y="0" width="20" height="17" uuid="850869b5-b9cb-465e-9188-4ca3663005ad"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1877,7 +1982,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_PDM} == 0? null : $F{SM_PDM}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="461" y="0" width="22" height="17" uuid="f0a5228f-4e2a-4140-9552-df3ab850389d"/>
+				<reportElement x="528" y="0" width="22" height="17" uuid="f0a5228f-4e2a-4140-9552-df3ab850389d"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1887,7 +1992,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_HC} == 0? null : $F{SM_HC}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement x="483" y="0" width="20" height="17" uuid="15a93357-1a16-4e0c-a56a-c8b5f271959f"/>
+				<reportElement x="550" y="0" width="20" height="17" uuid="15a93357-1a16-4e0c-a56a-c8b5f271959f"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1897,9 +2002,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{PC_HC} == 0? null : $F{PC_HC}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="503" y="0" width="30" height="17" uuid="e93cf291-b8c2-4518-a47e-04da47f21ecd">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="570" y="0" width="24" height="17" uuid="e93cf291-b8c2-4518-a47e-04da47f21ecd"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1909,9 +2012,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_122}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="533" y="0" width="30" height="17" uuid="07345f7a-3000-4909-bade-e5f210cf429a">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="594" y="0" width="24" height="17" uuid="07345f7a-3000-4909-bade-e5f210cf429a"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1921,9 +2022,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_124} == 0? null : $F{F_124}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="563" y="0" width="30" height="17" uuid="a29396dd-36d4-42f5-90a2-d6326062af38">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="618" y="0" width="24" height="17" uuid="a29396dd-36d4-42f5-90a2-d6326062af38"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1933,9 +2032,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_7} == 0? null : $F{F_7}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="593" y="0" width="30" height="17" uuid="95fe2e21-b38e-4c51-b300-d40febd46aa7">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="642" y="0" width="24" height="17" uuid="95fe2e21-b38e-4c51-b300-d40febd46aa7"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1945,9 +2042,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_8} == 0? null : $F{F_8}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="623" y="0" width="30" height="17" uuid="9cbb8a11-a059-4be2-a20e-d3b9c981bb6d">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="666" y="0" width="24" height="17" uuid="9cbb8a11-a059-4be2-a20e-d3b9c981bb6d"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1957,9 +2052,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_48} == 0? null : $F{F_48}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="653" y="0" width="30" height="17" uuid="1d05c94c-3f2b-40a5-8bff-0eb5495a1f41">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="690" y="0" width="24" height="17" uuid="1d05c94c-3f2b-40a5-8bff-0eb5495a1f41"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1969,7 +2062,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_350} == 0? null :  $F{F_350}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="683" y="0" width="30" height="17" uuid="e157898d-9d25-475a-ac35-a8a6192c68bf">
+				<reportElement x="714" y="0" width="24" height="17" uuid="e157898d-9d25-475a-ac35-a8a6192c68bf">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -1981,9 +2074,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_353} == 0? null : $F{F_353}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="713" y="0" width="30" height="17" uuid="2a2e0f71-480a-47da-bc7e-769a0fc34f9e">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="738" y="0" width="24" height="17" uuid="2a2e0f71-480a-47da-bc7e-769a0fc34f9e"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -1993,9 +2084,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_359} == 0? null : $F{F_359}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="743" y="0" width="30" height="17" uuid="4b2f1acd-91de-466c-9d31-881e03431813">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="762" y="0" width="24" height="17" uuid="4b2f1acd-91de-466c-9d31-881e03431813"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2005,7 +2094,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{F_360} == 0? null : $F{F_360}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="212" y="0" width="24" height="17" uuid="06f5e514-6c07-4c16-aef9-80a04b773f62"/>
+				<reportElement x="201" y="0" width="24" height="17" uuid="06f5e514-6c07-4c16-aef9-80a04b773f62"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2015,7 +2104,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FM050} == 0? null : $F{SM_FM050}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="236" y="0" width="20" height="17" uuid="2356f3fb-0af9-42a7-89ca-053e9b30fae3"/>
+				<reportElement x="225" y="0" width="20" height="17" uuid="2356f3fb-0af9-42a7-89ca-053e9b30fae3"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2025,7 +2114,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FM060} == 0? null : $F{SM_FM060}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="256" y="0" width="21" height="17" uuid="6f712344-3dec-4d40-84df-24a9ed094605"/>
+				<reportElement x="245" y="0" width="21" height="17" uuid="6f712344-3dec-4d40-84df-24a9ed094605"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2035,7 +2124,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FM070} == 0? null : $F{SM_FM070}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="277" y="0" width="22" height="17" uuid="487d95e7-2def-4817-86b5-e91fdc047d89"/>
+				<reportElement x="266" y="0" width="22" height="17" uuid="487d95e7-2def-4817-86b5-e91fdc047d89"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2045,7 +2134,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FM310} == 0? null : $F{SM_FM310}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="299" y="0" width="20" height="17" uuid="185e5613-064e-4386-a514-f11505553630"/>
+				<reportElement x="288" y="0" width="20" height="17" uuid="185e5613-064e-4386-a514-f11505553630"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2055,7 +2144,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FM320} == 0? null : $F{SM_FM320}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="319" y="0" width="22" height="17" uuid="88824684-c2ac-42b1-81b8-652a6795d168"/>
+				<reportElement x="308" y="0" width="22" height="17" uuid="88824684-c2ac-42b1-81b8-652a6795d168"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2065,9 +2154,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$F{SM_FM330} == 0? null : $F{SM_FM330}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="773" y="0" width="28" height="17" uuid="b872e2c6-4fa3-4bed-8bbe-cdc196aea630">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="786" y="0" width="24" height="17" uuid="b872e2c6-4fa3-4bed-8bbe-cdc196aea630"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2075,6 +2162,66 @@ AND AGE >= 0]]>
 					<font fontName="TH SarabunPSK" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{F_361} == 0? null : $F{F_361}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="330" y="0" width="13" height="17" uuid="7f992e07-c90b-4bbe-bdd7-418f913fc9c1"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_BAG31} == 0? null : $F{SM_BAG31}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="343" y="0" width="13" height="17" uuid="ddcf41ec-455a-4d17-b74b-87ec1c59cfae"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_BAG32} == 0? null : $F{SM_BAG32}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="356" y="0" width="13" height="17" uuid="360065a4-43e8-4394-b93d-5708b996d0c2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_BAG33} == 0? null : $F{SM_BAG33}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="369" y="0" width="13" height="17" uuid="76587fba-3a43-4849-be18-e936c1d13bbb"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_BAG41} == 0? null : $F{SM_BAG41}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="382" y="0" width="13" height="17" uuid="7172dd2d-63e8-46f0-81c0-26b9a0432fd9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_BAG41} == 0? null : $F{SM_BAG41}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="395" y="0" width="13" height="17" uuid="a0425aee-c93d-41c7-abc4-216e1e4ee13f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SM_BAG43} == 0? null : $F{SM_BAG43}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -2167,7 +2314,7 @@ AND AGE >= 0]]>
 	<summary>
 		<band height="14" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="77" height="14" uuid="7c2a04e8-fb49-40a6-b1cd-f1f2bf39bf55"/>
+				<reportElement x="-11" y="0" width="77" height="14" uuid="7c2a04e8-fb49-40a6-b1cd-f1f2bf39bf55"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -2181,7 +2328,7 @@ AND AGE >= 0]]>
 				<text><![CDATA[Total :]]></text>
 			</staticText>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="103" y="0" width="27" height="14" backcolor="#FFFFCC" uuid="7e54ac14-5317-466b-91b3-813dbdbc2586"/>
+				<reportElement mode="Opaque" x="92" y="0" width="27" height="14" backcolor="#FFFFCC" uuid="7e54ac14-5317-466b-91b3-813dbdbc2586"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2191,7 +2338,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FEED}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="130" y="0" width="21" height="14" backcolor="#FFFFCC" uuid="2b8844a8-7eda-405a-a403-2d6298102239"/>
+				<reportElement mode="Opaque" x="119" y="0" width="21" height="14" backcolor="#FFFFCC" uuid="2b8844a8-7eda-405a-a403-2d6298102239"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2201,7 +2348,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM010}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="151" y="0" width="21" height="14" backcolor="#FFFFCC" uuid="20d713f5-73e2-4a40-bde0-432d000f4f6d"/>
+				<reportElement mode="Opaque" x="140" y="0" width="21" height="14" backcolor="#FFFFCC" uuid="20d713f5-73e2-4a40-bde0-432d000f4f6d"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2211,7 +2358,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM020}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="172" y="0" width="20" height="14" backcolor="#FFFFCC" uuid="63f29742-40bc-48bf-8ec3-443a51a498b9"/>
+				<reportElement mode="Opaque" x="161" y="0" width="20" height="14" backcolor="#FFFFCC" uuid="63f29742-40bc-48bf-8ec3-443a51a498b9"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2221,7 +2368,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM030}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="192" y="0" width="20" height="14" backcolor="#FFFFCC" uuid="e648f087-d2a6-4de9-92e9-e2a29cb567ec"/>
+				<reportElement mode="Opaque" x="181" y="0" width="20" height="14" backcolor="#FFFFCC" uuid="e648f087-d2a6-4de9-92e9-e2a29cb567ec"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2231,7 +2378,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM040}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="341" y="0" width="40" height="14" backcolor="#CCFFCC" uuid="2cb51a82-8c76-49d5-8dbd-505b6ec403db"/>
+				<reportElement mode="Opaque" x="408" y="0" width="40" height="14" backcolor="#CCFFCC" uuid="2cb51a82-8c76-49d5-8dbd-505b6ec403db"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2241,7 +2388,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_GPFM}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="381" y="0" width="20" height="14" backcolor="#CCFFCC" uuid="0173056c-3bb3-41b7-8327-e113387e4733"/>
+				<reportElement mode="Opaque" x="448" y="0" width="20" height="14" backcolor="#CCFFCC" uuid="0173056c-3bb3-41b7-8327-e113387e4733"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2251,7 +2398,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_PCF}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="401" y="0" width="20" height="14" backcolor="#CCFFCC" uuid="24fd06f1-0e44-4c0e-9dee-35ebde11dab0"/>
+				<reportElement mode="Opaque" x="468" y="0" width="20" height="14" backcolor="#CCFFCC" uuid="24fd06f1-0e44-4c0e-9dee-35ebde11dab0"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2261,7 +2408,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_PCM}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="421" y="0" width="20" height="14" backcolor="#CCFFCC" uuid="37d12f7d-b867-4e85-b066-234c6f9a83f3"/>
+				<reportElement mode="Opaque" x="488" y="0" width="20" height="14" backcolor="#CCFFCC" uuid="37d12f7d-b867-4e85-b066-234c6f9a83f3"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2271,7 +2418,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_PDF}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="441" y="0" width="20" height="14" backcolor="#CCFFCC" uuid="f4e0237e-0839-4691-b32f-759a15935a69"/>
+				<reportElement mode="Opaque" x="508" y="0" width="20" height="14" backcolor="#CCFFCC" uuid="f4e0237e-0839-4691-b32f-759a15935a69"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2281,7 +2428,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_PDM}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="461" y="0" width="22" height="14" backcolor="#CCFFFF" uuid="433fc43a-63dd-4176-b64a-09b02f2e69ae"/>
+				<reportElement mode="Opaque" x="528" y="0" width="22" height="14" backcolor="#CCFFFF" uuid="433fc43a-63dd-4176-b64a-09b02f2e69ae"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2291,7 +2438,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_HC}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="483" y="0" width="20" height="14" backcolor="#CCFFFF" uuid="43a41e10-a213-4c45-848a-26b40abb2e58"/>
+				<reportElement mode="Opaque" x="550" y="0" width="20" height="14" backcolor="#CCFFFF" uuid="43a41e10-a213-4c45-848a-26b40abb2e58"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2301,7 +2448,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_AVG_HC}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="77" y="0" width="26" height="14" backcolor="#FFFFCC" uuid="49816891-79ec-460b-baa5-2f30a2be0360"/>
+				<reportElement mode="Opaque" x="66" y="0" width="26" height="14" backcolor="#FFFFCC" uuid="49816891-79ec-460b-baa5-2f30a2be0360"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2311,9 +2458,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_AVG_GDD}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="503" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="ed892896-4462-4408-9575-db662b552355">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="570" y="0" width="24" height="14" backcolor="#FFCCCC" uuid="ed892896-4462-4408-9575-db662b552355"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2323,9 +2468,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_301022}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="533" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="2b874ffa-1be6-4734-8504-8ee755b30758">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="594" y="0" width="24" height="14" backcolor="#FFCCCC" uuid="2b874ffa-1be6-4734-8504-8ee755b30758"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2335,9 +2478,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302024}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="563" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="1c3e989c-aaf8-4bec-998b-1596c4bca7bd">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="618" y="0" width="24" height="14" backcolor="#FFCCCC" uuid="1c3e989c-aaf8-4bec-998b-1596c4bca7bd"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2347,9 +2488,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302002}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="593" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="5f0c7b6c-aaa4-4552-a531-4af89d368a86">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="642" y="0" width="24" height="14" backcolor="#FFCCCC" uuid="5f0c7b6c-aaa4-4552-a531-4af89d368a86"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2359,7 +2498,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302003}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="623" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="8cbc8b7e-ee78-4c3a-b077-62dbe5262921">
+				<reportElement mode="Opaque" x="666" y="0" width="24" height="14" backcolor="#FFCCCC" uuid="8cbc8b7e-ee78-4c3a-b077-62dbe5262921">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -2371,9 +2510,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302016}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="653" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="ce363bd9-3df6-4b7e-a09b-923622c9faca">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="690" y="0" width="24" height="14" backcolor="#FFCCCC" uuid="ce363bd9-3df6-4b7e-a09b-923622c9faca"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2383,9 +2520,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302050}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="683" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="6f9f71a3-6744-43a6-96d1-161fb055898f">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="714" y="0" width="24" height="14" backcolor="#FFCCCC" uuid="6f9f71a3-6744-43a6-96d1-161fb055898f"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2395,9 +2530,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302053}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="713" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="96d18afc-46ba-472e-a0ce-bc90b0f97db1">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="738" y="0" width="24" height="14" backcolor="#FFCCCC" uuid="96d18afc-46ba-472e-a0ce-bc90b0f97db1"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2407,9 +2540,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_302059}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="743" y="0" width="30" height="14" backcolor="#FFCCCC" uuid="056c3d0b-9ad9-4d23-9b74-c77480b68cc0">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="762" y="0" width="24" height="14" backcolor="#FFCCCC" uuid="056c3d0b-9ad9-4d23-9b74-c77480b68cc0"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2419,7 +2550,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_303060}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="212" y="0" width="24" height="14" backcolor="#FFFFCC" uuid="1709c86c-5af9-4e9d-9e7c-50dfddbf96e5"/>
+				<reportElement mode="Opaque" x="201" y="0" width="24" height="14" backcolor="#FFFFCC" uuid="1709c86c-5af9-4e9d-9e7c-50dfddbf96e5"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2429,7 +2560,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM050}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="236" y="0" width="20" height="14" backcolor="#FFFFCC" uuid="5fd92bfd-e8aa-44f6-b263-c6c78940b1fd"/>
+				<reportElement mode="Opaque" x="225" y="0" width="20" height="14" backcolor="#FFFFCC" uuid="5fd92bfd-e8aa-44f6-b263-c6c78940b1fd"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2439,7 +2570,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM060}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="256" y="0" width="21" height="14" backcolor="#FFFFCC" uuid="5f87510c-919f-479e-956a-eb9fd330bf76"/>
+				<reportElement mode="Opaque" x="245" y="0" width="21" height="14" backcolor="#FFFFCC" uuid="5f87510c-919f-479e-956a-eb9fd330bf76"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2449,7 +2580,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM070}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="277" y="0" width="22" height="14" backcolor="#FFFFCC" uuid="6a62b0ec-3d10-462c-aca9-325264ab6805"/>
+				<reportElement mode="Opaque" x="266" y="0" width="22" height="14" backcolor="#FFFFCC" uuid="6a62b0ec-3d10-462c-aca9-325264ab6805"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2459,7 +2590,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM310}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="299" y="0" width="20" height="14" backcolor="#FFFFCC" uuid="21f8fcb2-e06e-4c44-b11b-2d8f1abbe780"/>
+				<reportElement mode="Opaque" x="288" y="0" width="20" height="14" backcolor="#FFFFCC" uuid="21f8fcb2-e06e-4c44-b11b-2d8f1abbe780"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2469,7 +2600,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM320}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="319" y="0" width="22" height="14" backcolor="#FFFFCC" uuid="c05004d0-f10c-4b70-8f0c-1525c063e79d"/>
+				<reportElement mode="Opaque" x="308" y="0" width="22" height="14" backcolor="#FFFFCC" uuid="c05004d0-f10c-4b70-8f0c-1525c063e79d"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2479,9 +2610,7 @@ AND AGE >= 0]]>
 				<textFieldExpression><![CDATA[$V{TOTAL_SM_FM330}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement mode="Opaque" x="773" y="0" width="28" height="14" backcolor="#FFCCCC" uuid="73a12e5a-22e0-4e12-b438-c8ee2d3e00fd">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="786" y="0" width="24" height="14" backcolor="#FFCCCC" uuid="73a12e5a-22e0-4e12-b438-c8ee2d3e00fd"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -2489,6 +2618,66 @@ AND AGE >= 0]]>
 					<font fontName="TH SarabunPSK" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_SUM_303061}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="330" y="0" width="13" height="14" backcolor="#FA82E2" uuid="59009dac-48cf-4a42-b4b1-a42d265cdf11"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_SUM_SM_BAG31}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="343" y="0" width="13" height="14" backcolor="#FA82E2" uuid="5c286687-07ac-425d-929d-8c34827bdfb1"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_SUM_SM_BAG32}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="356" y="0" width="13" height="14" backcolor="#FA82E2" uuid="5cc871dd-2ee0-4fa9-b15a-c3072d3cb579"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_SUM_SM_BAG33}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="369" y="0" width="13" height="14" backcolor="#FA82E2" uuid="281f9cd0-1737-4f58-9755-5fe1b781bfbe"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_SUM_SM_BAG41}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="382" y="0" width="13" height="14" backcolor="#FA82E2" uuid="42eb6c6e-8038-4c2d-8a85-ac96cccbc49b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_SUM_SM_BAG42}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="395" y="0" width="13" height="14" backcolor="#FA82E2" uuid="e2c2aaf0-b93d-4d10-9428-64ddbe8a173f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_SUM_SM_BAG43}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

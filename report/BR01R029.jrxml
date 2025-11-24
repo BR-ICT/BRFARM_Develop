@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BF01R0029" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffd84165-eee5-4a4c-889a-7fb0c0510697">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="Crosstab Data Text" hTextAlign="Center" hImageAlign="Center"/>
 	<parameter name="Farm" class="java.lang.String"/>
 	<parameter name="Breed" class="java.lang.String"/>
 	<parameter name="StartDate" class="java.lang.String"/>
@@ -27,6 +28,7 @@ AND SUBSTR(INFO_ITEM,0,4) = $P{Item}
 AND DISE_CODE = INFO_DISE
 AND HOUS_CODE = INFO_HOUSE
 AND INFO_ITEM = ITEM_CODE
+AND INFO_FARM  = ITEM_FARM
 AND HOUS_CODE BETWEEN $P{StartHouse} AND $P{EndHouse}
 AND SUBSTR(INFO_DATE,7) || SUBSTR(INFO_DATE,4,2) || SUBSTR(INFO_DATE,1,2) BETWEEN $P{StartDate} AND $P{EndDate}
 GROUP BY INFO_DATE,INFO_HOUSE,HOUS_NAME,INFO_ITEM,INFO_DISE,DISE_NAME
@@ -137,7 +139,7 @@ ORDER BY INFO_HOUSE,INFO_DATE,INFO_ITEM,INFO_DISE]]>
 					<crosstabTotalRowHeader>
 						<cellContents>
 							<staticText>
-								<reportElement x="0" y="0" width="104" height="25" uuid="88816500-55f0-4227-822a-db3562d94159"/>
+								<reportElement x="0" y="0" width="104" height="20" uuid="88816500-55f0-4227-822a-db3562d94159"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="TH SarabunPSK" isBold="true"/>
 								</textElement>
@@ -413,6 +415,39 @@ ORDER BY INFO_HOUSE,INFO_DATE,INFO_ITEM,INFO_DISE]]>
 							<textFieldExpression><![CDATA[$V{INFO_QTYMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="20" rowTotalGroup="MONTH">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell width="50" height="20" rowTotalGroup="MONTH" columnTotalGroup="INFO_ITEM">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell height="20" rowTotalGroup="MONTH" columnTotalGroup="INFO_DISE">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell height="20" rowTotalGroup="MONTH" columnTotalGroup="DISE_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell height="20" rowTotalGroup="MONTH" columnTotalGroup="ITEM_GROUP">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell height="20" rowTotalGroup="INFO_HOUSE" columnTotalGroup="INFO_DISE">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell height="20" rowTotalGroup="INFO_HOUSE" columnTotalGroup="DISE_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell height="20" rowTotalGroup="INFO_HOUSE" columnTotalGroup="ITEM_GROUP">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell height="20" rowTotalGroup="INFO_DATE" columnTotalGroup="INFO_DISE">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell height="20" rowTotalGroup="INFO_DATE" columnTotalGroup="DISE_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell height="20" rowTotalGroup="INFO_DATE" columnTotalGroup="ITEM_GROUP">
+					<cellContents/>
 				</crosstabCell>
 			</crosstab>
 		</band>
