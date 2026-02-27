@@ -125,7 +125,7 @@ public class BRLogin extends javax.swing.JFrame {
 
         jcbBreed.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please Select : Breed", "GP : Grand Parents Stock", "PS : Parent Stock", "CM : Commercial Farm" }));
 
-        jLabel1.setText("Update : 24/11/2025");
+        jLabel1.setText("Update : 27/02/2026");
 
         btnupdate.setActionCommand("Update");
         btnupdate.setLabel("Update");
